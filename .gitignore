@@ -1,0 +1,7 @@
+*.log
+*.db
+*.sqlite
+*.swp
+OZW_Log.txt
+secrets.yaml
+known_devices.yaml
