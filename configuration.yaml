@@ -87,6 +87,11 @@ sensor:
   #  name: Totaal verbruik
   #  unit_of_measurement: 'W'
 
+camera:
+  platform: generic
+  still_image_url: https://cdn.knmi.nl/knmi/map/page/weer/actueel-weer/neerslagradar/WWWRADARLGT_loop.gif
+  name: Buienradar
+
 zwave:
   usb_path: /dev/ttyACM0
   network_key: !secret zwave_network_key

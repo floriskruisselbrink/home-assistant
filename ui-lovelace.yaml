@@ -1,5 +1,9 @@
 title: Bleekweg 28
 
+resources:
+  - url: /local/monster-card.js?v=1
+    type: js
+
 views:
   - title: System
     icon: mdi:settings
@@ -10,13 +14,26 @@ views:
           - sensor.disk_use_percent_
           - sensor.processor_use
           - sensor.memory_use_percent
+      - type: custom:monster-card
+        show_empty: true
+        card: 
+          type: glance
+          title: Tracker
+        filter:
+          include:
+            - domain: device_tracker
+              state: 'home'
 
   - title: Example
     background: radial-gradient(crimson, skyblue)
     theme: dark-mode
     cards:
       - type: weather-forecast
-        entity: weather.Enschede
+        entity: weather.enschede
+      - type: picture-entity
+        entity: camera.buienradar
+        show_state: false
+        show_name: false
       - type: conditional
         conditions:
           - entity: sensor.postnl
