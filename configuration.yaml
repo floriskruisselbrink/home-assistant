@@ -1,0 +1,106 @@
+homeassistant:
+  name: Home
+  latitude: !secret home_lat
+  longitude: !secret home_lon
+  elevation: !secret home_elevation
+  unit_system: metric
+  time_zone: Europe/Amsterdam
+  customize: !include customize.yaml
+
+influxdb:
+  host: 127.0.0.1
+
+frontend:
+
+config:
+
+http:
+  api_password: !secret http_password
+  ssl_certificate: !secret ssl_certificate
+  ssl_key: !secret ssl_key
+  base_url: !secret base_url
+
+updater:
+  include_used_components: true
+
+duckdns:
+  domain: kruiwagen
+  access_token: !secret duckdns_accesstoken
+
+discovery:
+
+recorder:
+  purge_keep_days: 5
+  include:
+    domains:
+      - device_tracker
+    entities:
+      - sensor.keuken_kookplaat_spotjes_power
+      - sensor.keuken_raam_spotjes_power
+      - sensor.woonkamer_staandelamp_power
+      - sensor.woonkamer_tv_backlight_power
+      - sensor.disk_use_percent_
+      - sensor.memory_use_percent
+      - sensor.processor_use
+history:
+logbook:
+
+#map:
+
+ios:
+
+sun:
+
+weather:
+  - platform: buienradar
+    name: Enschede
+    forecast: True
+
+sensor:
+  - platform: postnl
+    username: !secret postnl_username
+    password: !secret postnl_password
+  - platform: systemmonitor
+    resources:
+      - type: disk_use_percent
+        arg: /
+      - type: memory_use_percent
+      - type: memory_use
+      - type: memory_free
+      - type: processor_use
+      - type: swap_use_percent
+      - type: swap_use
+      - type: swap_free
+      - type: last_boot
+      - type: since_last_boot
+      - type: network_in
+        arg: wlan0
+      - type: network_out
+        arg: wlan0
+      - type: ipv4_address
+        arg: wlan0
+  # slimme meter
+  #- platform: rest
+  #  resource: http://192.168.2.17/a?f=j
+  #  value_template: '{{ value_json.pwr }}'
+  #  method: GET
+  #  name: Totaal verbruik
+  #  unit_of_measurement: 'W'
+
+zwave:
+  usb_path: /dev/ttyACM0
+  network_key: !secret zwave_network_key
+
+homekit:
+  auto_start: False
+  filter:
+    include_entities:
+      - light.keuken_raam_spotjes
+      - switch.keuken_kookplaat_spotjes
+      - switch.woonkamer_staandelamp
+      - switch.woonkamer_tv_backlight
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+

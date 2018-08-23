@@ -1,0 +1,20 @@
+sensor.yr_symbol:
+  friendly_name: Weer
+group.all_automations:
+  hidden: false
+group.all_devices:
+  hidden: false
+group.all_lights:
+  hidden: false
+group.all_scripts:
+  hidden: false
+group.all_switches:
+  hidden: false
+zone.home:
+  radius: 50
+switch.keuken_kookplaat_spotjes:
+  icon: mdi:lightbulb
+switch.woonkamer_staandelamp:
+  icon: mdi:lightbulb
+switch.woonkamer_tv_backlight:
+  icon: mdi:lightbulb

@@ -1,0 +1,38 @@
+default_view:
+  view: yes
+  icon: mdi:home-outline
+  entities:
+    - group.keuken
+    - group.woonkamer
+    - sun.sun
+    - sensor.yr_symbol
+
+system:
+  name: System
+  view: yes
+  entities:
+    - group.raspberry_pi
+    - group.all_automations
+    - group.all_devices
+    - group.all_lights
+    - group.all_scripts
+    - group.all_switches
+
+raspberry_pi:
+  name: Raspberry Pi
+  entities:
+    - sensor.disk_use_percent_
+    - sensor.processor_use
+    - sensor.memory_free
+
+keuken:
+  name: Keuken
+  entities:
+    - light.keuken_raam_spotjes
+    - switch.keuken_kookplaat_spotjes
+
+woonkamer:
+  name: Woonkamer
+  entities:
+    - switch.woonkamer_tv_backlight
+    - switch.woonkamer_staandelamp

@@ -1,0 +1,53 @@
+title: Bleekweg 28
+
+views:
+  - title: System
+    icon: mdi:settings
+    cards:
+      - type: glance
+        title: Raspberry Pi
+        entities:
+          - sensor.disk_use_percent_
+          - sensor.processor_use
+          - sensor.memory_use_percent
+
+  - title: Example
+    background: radial-gradient(crimson, skyblue)
+    theme: dark-mode
+    cards:
+      - type: weather-forecast
+        entity: weather.Enschede
+      - type: conditional
+        conditions:
+          - entity: sensor.postnl
+            state_not: "0"
+        card:
+          type: entities
+          title: PostNL
+          entities:
+            - sensor.postnl
+      - type: entity-filter
+        entities:
+          - device_tracker.iphone_van_floris
+        state_filter:
+          - 'home'
+        card:
+          type: glance
+          title: People that are home
+
+      - type: picture-entity
+        image: https://www.home-assistant.io/images/default-social.png
+        entity: switch.woonkamer_staandelamp
+
+  - icon: mdi:home-assistant
+    title: Second view
+    cards:
+      - type: entities
+        title: Example
+        entities:
+          - switch.woonkamer_staandelamp
+          - switch.woonkamer_tv_backlight
+      - type: markdown
+        title: Lovelace
+        content: >
+          Welcome to your **Lovelace UI**.
