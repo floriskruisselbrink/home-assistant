@@ -5,6 +5,15 @@ resources:
     type: js
 
 views:
+  - title: Home
+    icon: mdi:home
+    cards:
+      - type: entities
+        title: Verlichting
+        entities: 
+          - light.keuken
+          - light.woonkamer
+
   - title: System
     icon: mdi:settings
     cards:
@@ -22,7 +31,7 @@ views:
         filter:
           include:
             - domain: device_tracker
-              state: 'home'
+              #state: 'home'
 
   - title: Example
     background: radial-gradient(crimson, skyblue)

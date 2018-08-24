@@ -105,6 +105,44 @@ homekit:
       - switch.woonkamer_staandelamp
       - switch.woonkamer_tv_backlight
 
+light:
+  - platform: template
+    lights: 
+      keuken_kookplaat_spotjes:
+        value_template: '{{ is_state("switch.keuken_kookplaat_spotjes", "on") }}'
+        turn_on:
+          service: switch.turn_on
+          entity_id: switch.keuken_kookplaat_spotjes
+        turn_off:
+          service: switch.turn_off
+          entity_id: switch.keuken_kookplaat_spotjes
+      woonkamer_tv_backlight:
+        value_template: '{{ is_state("switch.woonkamer_tv_backlight", "on") }}'
+        turn_on:
+          service: switch.turn_on
+          entity_id: switch.woonkamer_tv_backlight
+        turn_off:
+          service: switch.turn_off
+          entity_id: switch.woonkamer_tv_backlight
+      woonkamer_staandelamp:
+        value_template: '{{ is_state("switch.woonkamer_staandelamp", "on") }}'
+        turn_on:
+          service: switch.turn_on
+          entity_id: switch.woonkamer_staandelamp
+        turn_off:
+          service: switch.turn_off
+          entity_id: switch.woonkamer_staandelamp
+  - platform: group
+    name: Keuken
+    entities:
+      - light.keuken_raam_spotjes
+      - light.keuken_kookplaat_spotjes
+  - platform: group
+    name: Woonkamer
+    entities:
+      - light.woonkamer_staandelamp
+      - light.woonkamer_tv_backlight
+
 group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml

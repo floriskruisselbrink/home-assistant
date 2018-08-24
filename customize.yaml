@@ -13,8 +13,8 @@ group.all_switches:
 zone.home:
   radius: 50
 switch.keuken_kookplaat_spotjes:
-  icon: mdi:lightbulb
+  hidden: true
 switch.woonkamer_staandelamp:
-  icon: mdi:lightbulb
+  hidden: true
 switch.woonkamer_tv_backlight:
-  icon: mdi:lightbulb
+  hidden: true

@@ -36,7 +36,7 @@
         scene_id: 1
   action:
     - service: homeassistant.turn_on
-      entity_id: group.woonkamer
+      entity_id: light.woonkamer
 #- id: mini_1_held
 #  alias: 'Minimote Button 1 Held'
 #  trigger:
@@ -58,7 +58,7 @@
         scene_id: 3
   action:
     - service: homeassistant.turn_off
-      entity_id: group.woonkamer
+      entity_id: light.woonkamer
 #- id: mini_2_held
 #  alias: 'Minimote Button 2 Held'
 #  trigger:
@@ -80,7 +80,7 @@
         scene_id: 5
   action:
     - service: homeassistant.turn_on
-      entity_id: group.keuken
+      entity_id: light.keuken
 #- id: mini_3_held
 #  alias: 'Minimote Button 3 Held'
 #  trigger:
@@ -102,7 +102,7 @@
         scene_id: 7
   action:
     - service: homeassistant.turn_off
-      entity_id: group.keuken
+      entity_id: light.keuken
 #- id: mini_4_held
 #  alias: 'Minimote Button 4 Held'
 #  trigger:

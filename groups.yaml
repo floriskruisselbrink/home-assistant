@@ -2,8 +2,8 @@ default_view:
   view: yes
   icon: mdi:home-outline
   entities:
-    - group.keuken
-    - group.woonkamer
+    - light.keuken
+    - light.woonkamer
     - sun.sun
     - sensor.yr_symbol
 
@@ -24,15 +24,3 @@ raspberry_pi:
     - sensor.disk_use_percent_
     - sensor.processor_use
     - sensor.memory_free
-
-keuken:
-  name: Keuken
-  entities:
-    - light.keuken_raam_spotjes
-    - switch.keuken_kookplaat_spotjes
-
-woonkamer:
-  name: Woonkamer
-  entities:
-    - switch.woonkamer_tv_backlight
-    - switch.woonkamer_staandelamp
