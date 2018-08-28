@@ -42,6 +42,11 @@ recorder:
       - sensor.disk_use_percent_
       - sensor.memory_use_percent
       - sensor.processor_use
+      - sensor.wasmachine_power
+      - sensor.wasmachine_status
+      - sensor.muziekkamer_temperature
+      - sensor.muziekkamer_relative_humidity
+      - weather.enschede
 history:
 logbook:
 
@@ -56,10 +61,34 @@ weather:
     name: Enschede
     forecast: True
 
+input_select:
+  wasmachine_status:
+    name: Wasmachine Status
+    options:
+      - Uit
+      - Aan
+      - Bezig
+      - Klaar
+    initial: Uit
+
 sensor:
   - platform: postnl
     username: !secret postnl_username
     password: !secret postnl_password
+  - platform: template
+    sensors:
+      enschede_temperatuur:
+        friendly_name: Enschede
+        unit_of_measurement: "°C"
+        value_template: "{{ states.weather.enschede.attributes.temperature }}"
+      wasmachine_status:
+        value_template: "{{ states.input_select.wasmachine_status.state }}"
+        friendly_name: Wasmachine Status
+      muziekkamer_multisensor_battery:
+        friendly_name: Muziekkamer Multisensor
+        unit_of_measurement: "%"
+        device_class: battery
+        value_template: "{{ states.zwave.muziekkamer_multisensor_2in1.attributes.battery_level }}"
   - platform: systemmonitor
     resources:
       - type: disk_use_percent
@@ -95,15 +124,23 @@ camera:
 zwave:
   usb_path: /dev/ttyACM0
   network_key: !secret zwave_network_key
+  device_config: !include zwave_device_config.yaml
+  device_config_glob:
+    "sensor.*_sourcenodeid*":
+      ignored: true
+    "sensor.*_exporting*":
+      ignored: true
 
 homekit:
   auto_start: False
   filter:
     include_entities:
       - light.keuken_raam_spotjes
-      - switch.keuken_kookplaat_spotjes
-      - switch.woonkamer_staandelamp
-      - switch.woonkamer_tv_backlight
+      - light.keuken_kookplaat_spotjes
+      - light.woonkamer_staandelamp
+      - light.woonkamer_tv_backlight
+      - sensor.muziekkamer_relative_humidity
+      - sensor.muziekkamer_temperature
 
 light:
   - platform: template

@@ -3,6 +3,8 @@ title: Bleekweg 28
 resources:
   - url: /local/monster-card.js?v=1
     type: js
+  - url: /local/gauge-card.js?v=1
+    type: js
 
 views:
   - title: Home
@@ -13,6 +15,16 @@ views:
         entities: 
           - light.keuken
           - light.woonkamer
+      - type: entities
+        title: Muziekkamer
+        entities:
+          - sensor.muziekkamer_relative_humidity
+          - sensor.muziekkamer_temperature
+      - type: entities
+        title: Wasmachine
+        entities:
+          - sensor.wasmachine_status
+          - sensor.wasmachine_power
 
   - title: System
     icon: mdi:settings
@@ -23,6 +35,11 @@ views:
           - sensor.disk_use_percent_
           - sensor.processor_use
           - sensor.memory_use_percent
+      - type: entities
+        title: Batterijen
+        entities:
+          - sensor.muziekkamer_multisensor_battery
+          - sensor.iphone_van_floris_battery_level
       - type: custom:monster-card
         show_empty: true
         card: 
@@ -43,6 +60,11 @@ views:
         entity: camera.buienradar
         show_state: false
         show_name: false
+      - type: custom:gauge-card
+        title: Enschede
+        entity: sensor.enschede_temperatuur
+        min: -20
+        max: 35
       - type: conditional
         conditions:
           - entity: sensor.postnl
@@ -61,19 +83,27 @@ views:
           type: glance
           title: People that are home
 
-      - type: picture-entity
-        image: https://www.home-assistant.io/images/default-social.png
-        entity: switch.woonkamer_staandelamp
-
   - icon: mdi:home-assistant
     title: Second view
     cards:
-      - type: entities
-        title: Example
-        entities:
-          - switch.woonkamer_staandelamp
-          - switch.woonkamer_tv_backlight
-      - type: markdown
-        title: Lovelace
-        content: >
-          Welcome to your **Lovelace UI**.
+      - type: custom:monster-card
+        card:
+          type: entities
+          title: All Lights
+        filter:
+          include:
+            - domain: light
+      - type: custom:monster-card
+        card:
+          type: entities
+          title: Power Consumption
+        filter:
+          include:
+            - entity_id: "*power"
+      - type: custom:monster-card
+        card:
+          type: entities
+          title: All Sensors
+        filter:
+          include:
+            - domain: sensor

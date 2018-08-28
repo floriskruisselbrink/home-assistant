@@ -3,15 +3,21 @@
 #  trigger:
 #    - platform: event
 #      event_type: zwave.network_ready
+#    - platform: event
+#      event_type: zwave.network_complete
 #  action:
 #    - service: homekit.start
 
 - alias: 'Start HomeKit'
   trigger:
-    - platform: homeassistant
-      event: start
+    - platform: event
+      event_type: zwave.network_ready
+    - platform: event
+      event_type: zwave.network_complete
+#    - platform: homeassistant
+#      event: start
   action:
-    - delay: 00:05 # Waits 5 minutes
+#    - delay: 00:05 # Waits 5 minutes
     - service: homekit.start
     - service: notify.ios_iphone_van_floris
       data:
@@ -37,6 +43,7 @@
   action:
     - service: homeassistant.turn_on
       entity_id: light.woonkamer
+
 #- id: mini_1_held
 #  alias: 'Minimote Button 1 Held'
 #  trigger:
@@ -48,6 +55,7 @@
 #  action:
 #    - service: homeassistant.turn_off
 #      entity_id: switch.woonkamer_staandelamp
+
 - id: mini_2_pressed
   alias: 'Minimote Button 2 Pressed'
   trigger:
@@ -59,6 +67,7 @@
   action:
     - service: homeassistant.turn_off
       entity_id: light.woonkamer
+
 #- id: mini_2_held
 #  alias: 'Minimote Button 2 Held'
 #  trigger:
@@ -70,6 +79,7 @@
 #  action:
 #    - service: homeassistant.turn_off
 #      entity_id: switch.woonkamer_tv_backlight
+
 - id: mini_3_pressed
   alias: 'Minimote Button 3 Pressed'
   trigger:
@@ -81,6 +91,7 @@
   action:
     - service: homeassistant.turn_on
       entity_id: light.keuken
+
 #- id: mini_3_held
 #  alias: 'Minimote Button 3 Held'
 #  trigger:
@@ -92,6 +103,7 @@
 #  action:
 #    - service: homeassistant.turn_off
 #      entity_id: group.keuken
+
 - id: mini_4_pressed
   alias: 'Minimote Button 4 Pressed'
   trigger:
@@ -103,6 +115,7 @@
   action:
     - service: homeassistant.turn_off
       entity_id: light.keuken
+
 #- id: mini_4_held
 #  alias: 'Minimote Button 4 Held'
 #  trigger:
@@ -115,3 +128,53 @@
 #    - service: notify.ios_iphone_van_floris
 #      data:
 #        message: "Button 4 Held"
+
+##############
+# Wasmachine #
+##############
+- alias: Wasmachine aanzetten
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.wasmachine_power
+      above: 1
+  condition: 
+    - condition: state
+      entity_id: input_select.wasmachine_status
+      state: Uit
+  action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.wasmachine_status
+        option: Aan
+
+- alias: Wasmachine bezig
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.wasmachine_power
+      above: 3
+  action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.wasmachine_status
+        option: Bezig
+
+- alias: Wasmachine klaar
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.wasmachine_power
+      below: 3
+      for:
+        minutes: 5
+  condition:
+    - condition: state
+      entity_id: input_select.wasmachine_status
+      state: Bezig
+  action:
+    - service: input_select.select_option
+      data: 
+        entity_id: input_select.wasmachine_status
+        option: Klaar
+    - service: notify.ios_iphone_van_floris
+      data:
+        message: "Wasmachine is klaar"
+

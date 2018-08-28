@@ -1,5 +1,3 @@
-sensor.yr_symbol:
-  friendly_name: Weer
 group.all_automations:
   hidden: false
 group.all_devices:
@@ -18,3 +16,7 @@ switch.woonkamer_staandelamp:
   hidden: true
 switch.woonkamer_tv_backlight:
   hidden: true
+sensor.wasmachine_status:
+  icon: mdi:washing-machine
+sensor.muziekkamer_relative_humidity:
+  device_class: humidity
