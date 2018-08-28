@@ -10,6 +10,7 @@
 *.swp
 .smb*
 
+.homekit.state
 .HA_VERSION
 /deps
 OZW_Log.txt

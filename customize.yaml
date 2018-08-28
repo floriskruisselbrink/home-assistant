@@ -20,3 +20,11 @@ sensor.wasmachine_status:
   icon: mdi:washing-machine
 sensor.muziekkamer_relative_humidity:
   device_class: humidity
+light.woonkamer_staandelamp:
+  icon: mdi:floor-lamp
+light.woonkamer_tv_backlight:
+  icon: mdi:television-classic
+light.keuken_kookplaat_spotjes:
+  icon: mdi:stove
+light.keuken_raam_spotjes:
+  icon: mdi:water-pump

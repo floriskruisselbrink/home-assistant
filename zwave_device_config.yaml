@@ -2,6 +2,8 @@ light.fibaro_system_fgd212_dimmer_2_level:
   ignored: true
 light.keuken_raam_spotjes_2:
   ignored: true
+sensor.keuken_kookplaat_spotjes_power_2:
+  ignored: true
 sensor.wasmachine_power_2:
   ignored: true
 

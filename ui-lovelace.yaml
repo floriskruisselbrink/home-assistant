@@ -23,7 +23,8 @@ views:
       - type: entities
         title: Wasmachine
         entities:
-          - sensor.wasmachine_status
+          - entity: sensor.wasmachine_status
+            secondary_info: last-changed
           - sensor.wasmachine_power
 
   - title: System
