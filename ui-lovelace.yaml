@@ -36,11 +36,14 @@ views:
           - sensor.disk_use_percent_
           - sensor.processor_use
           - sensor.memory_use_percent
-      - type: entities
-        title: Batterijen
-        entities:
-          - sensor.muziekkamer_multisensor_battery
-          - sensor.iphone_van_floris_battery_level
+      - type: custom:monster-card
+        card:
+          type: entities
+          title: Batterijen
+        filter:
+          include:
+            - entity_id: "sensor.*battery"
+            - entity_id: "sensor.*battery_level"
       - type: history-graph
         title: Muziekkamer
         entities:
