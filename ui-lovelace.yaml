@@ -41,6 +41,12 @@ views:
         entities:
           - sensor.muziekkamer_multisensor_battery
           - sensor.iphone_van_floris_battery_level
+      - type: history-graph
+        title: Muziekkamer
+        entities:
+          - sensor.muziekkamer_relative_humidity
+          - sensor.muziekkamer_temperature
+        hours_to_show: 72
       - type: custom:monster-card
         show_empty: true
         card: 

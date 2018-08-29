@@ -14,6 +14,11 @@ frontend:
 
 config:
 
+python_script:
+
+downloader:
+  download_dir: downloads
+
 http:
   api_password: !secret http_password
   ssl_certificate: !secret ssl_certificate
@@ -44,6 +49,7 @@ recorder:
       - sensor.processor_use
       - sensor.wasmachine_power
       - sensor.wasmachine_status
+      - input_select.wasmachine_status
       - sensor.muziekkamer_temperature
       - sensor.muziekkamer_relative_humidity
       - weather.enschede
@@ -69,7 +75,7 @@ input_select:
       - Aan
       - Bezig
       - Klaar
-    initial: Uit
+    #initial: Uit
 
 sensor:
   - platform: postnl
@@ -117,9 +123,9 @@ sensor:
   #  unit_of_measurement: 'W'
 
 camera:
-  platform: generic
-  still_image_url: https://cdn.knmi.nl/knmi/map/page/weer/actueel-weer/neerslagradar/WWWRADARLGT_loop.gif
-  name: Buienradar
+  - platform: generic
+    name: Buienradar
+    still_image_url: https://cdn.knmi.nl/knmi/map/page/weer/actueel-weer/neerslagradar/WWWRADARLGT_loop.gif
 
 zwave:
   usb_path: /dev/ttyACM0
