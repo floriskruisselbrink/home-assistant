@@ -1,0 +1,19 @@
+purge_keep_days: 5
+purge_interval: 1
+include:
+  domains:
+    device_tracker
+  entities:
+    - sensor.keuken_kookplaat_spotjes_power
+    - sensor.keuken_raam_spotjes_power
+    - sensor.woonkamer_staandelamp_power
+    - sensor.woonkamer_tv_backlight_power
+    - sensor.disk_use_percent_
+    - sensor.memory_use_percent
+    - sensor.processor_use
+    - sensor.wasmachine_power
+    - sensor.wasmachine_status
+    - input_select.wasmachine_status
+    - sensor.muziekkamer_temperature
+    - sensor.muziekkamer_relative_humidity
+    - weather.enschede

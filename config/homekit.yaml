@@ -1,0 +1,9 @@
+auto_start: False
+filter:
+  include_entities:
+    - light.keuken_raam_spotjes
+    - light.keuken_kookplaat_spotjes
+    - light.woonkamer_staandelamp
+    - light.woonkamer_tv_backlight
+    - sensor.muziekkamer_relative_humidity
+    - sensor.muziekkamer_temperature

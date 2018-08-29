@@ -1,0 +1,47 @@
+- alias: Wasmachine aanzetten
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.wasmachine_power
+      above: 1
+  condition: 
+    - condition: state
+      entity_id: input_select.wasmachine_status
+      state: Uit
+  action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.wasmachine_status
+        option: Aan
+
+- alias: Wasmachine bezig
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.wasmachine_power
+      above: 3
+  action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.wasmachine_status
+        option: Bezig
+
+- alias: Wasmachine klaar
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.wasmachine_power
+      below: 3
+      for:
+        minutes: 5
+  condition:
+    - condition: state
+      entity_id: input_select.wasmachine_status
+      state: Bezig
+  action:
+    - service: input_select.select_option
+      data: 
+        entity_id: input_select.wasmachine_status
+        option: Klaar
+    - service: notify.ios_iphone_van_floris
+      data:
+        message: "Wasmachine is klaar"
+
+

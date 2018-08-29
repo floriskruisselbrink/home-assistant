@@ -1,0 +1,13 @@
+host: 127.0.0.1
+exclude:
+  domains:
+    - weblink
+    - camera
+    - group
+    - zone
+    - alert
+    - automation
+    - script
+  entities:
+    - sensor.since_last_boot
+    - sensor.last_boot

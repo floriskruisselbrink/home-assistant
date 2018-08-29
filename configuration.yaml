@@ -5,25 +5,7 @@ homeassistant:
   elevation: !secret home_elevation
   unit_system: metric
   time_zone: Europe/Amsterdam
-  customize: !include customize.yaml
-
-influxdb:
-  host: 127.0.0.1
-
-frontend:
-
-config:
-
-python_script:
-
-downloader:
-  download_dir: downloads
-
-http:
-  api_password: !secret http_password
-  ssl_certificate: !secret ssl_certificate
-  ssl_key: !secret ssl_key
-  base_url: !secret base_url
+  customize: !include config/customize.yaml
 
 updater:
   include_used_components: true
@@ -32,161 +14,31 @@ duckdns:
   domain: kruiwagen
   access_token: !secret duckdns_accesstoken
 
-discovery:
+downloader:
+  download_dir: downloads
 
-recorder:
-  purge_keep_days: 5
-  include:
-    domains:
-      - device_tracker
-    entities:
-      - sensor.keuken_kookplaat_spotjes_power
-      - sensor.keuken_raam_spotjes_power
-      - sensor.woonkamer_staandelamp_power
-      - sensor.woonkamer_tv_backlight_power
-      - sensor.disk_use_percent_
-      - sensor.memory_use_percent
-      - sensor.processor_use
-      - sensor.wasmachine_power
-      - sensor.wasmachine_status
-      - input_select.wasmachine_status
-      - sensor.muziekkamer_temperature
-      - sensor.muziekkamer_relative_humidity
-      - weather.enschede
+zwave: !include config/zwave.yaml
+homekit: !include config/homekit.yaml
+http: !include config/http.yaml
+influxdb: !include config/influxdb.yaml
+recorder: !include config/recorder.yaml
 history:
 logbook:
-
-#map:
-
+frontend:
+config:
+python_script:
+discovery:
 ios:
-
 sun:
 
-weather:
-  - platform: buienradar
-    name: Enschede
-    forecast: True
+weather: !include config/weather.yaml
+camera: !include config/camera.yaml
+light: !include_dir_merge_list config/light
+sensor: !include_dir_merge_list config/sensor
 
-input_select:
-  wasmachine_status:
-    name: Wasmachine Status
-    options:
-      - Uit
-      - Aan
-      - Bezig
-      - Klaar
-    #initial: Uit
+input_select: !include config/input_select.yaml
+automation: !include_dir_merge_list config/automations
+script: !include_dir_merge_list config/scripts
 
-sensor:
-  - platform: postnl
-    username: !secret postnl_username
-    password: !secret postnl_password
-  - platform: template
-    sensors:
-      enschede_temperatuur:
-        friendly_name: Enschede
-        unit_of_measurement: "°C"
-        value_template: "{{ states.weather.enschede.attributes.temperature }}"
-      wasmachine_status:
-        value_template: "{{ states.input_select.wasmachine_status.state }}"
-        friendly_name: Wasmachine Status
-      muziekkamer_multisensor_battery:
-        friendly_name: Muziekkamer Multisensor
-        unit_of_measurement: "%"
-        device_class: battery
-        value_template: "{{ states.zwave.muziekkamer_multisensor_2in1.attributes.battery_level }}"
-  - platform: systemmonitor
-    resources:
-      - type: disk_use_percent
-        arg: /
-      - type: memory_use_percent
-      - type: memory_use
-      - type: memory_free
-      - type: processor_use
-      - type: swap_use_percent
-      - type: swap_use
-      - type: swap_free
-      - type: last_boot
-      - type: since_last_boot
-      - type: network_in
-        arg: wlan0
-      - type: network_out
-        arg: wlan0
-      - type: ipv4_address
-        arg: wlan0
-  # slimme meter
-  #- platform: rest
-  #  resource: http://192.168.2.17/a?f=j
-  #  value_template: '{{ value_json.pwr }}'
-  #  method: GET
-  #  name: Totaal verbruik
-  #  unit_of_measurement: 'W'
-
-camera:
-  - platform: generic
-    name: Buienradar
-    still_image_url: https://cdn.knmi.nl/knmi/map/page/weer/actueel-weer/neerslagradar/WWWRADARLGT_loop.gif
-
-zwave:
-  usb_path: /dev/ttyACM0
-  network_key: !secret zwave_network_key
-  device_config: !include zwave_device_config.yaml
-  device_config_glob:
-    "sensor.*_sourcenodeid*":
-      ignored: true
-    "sensor.*_exporting*":
-      ignored: true
-
-homekit:
-  auto_start: False
-  filter:
-    include_entities:
-      - light.keuken_raam_spotjes
-      - light.keuken_kookplaat_spotjes
-      - light.woonkamer_staandelamp
-      - light.woonkamer_tv_backlight
-      - sensor.muziekkamer_relative_humidity
-      - sensor.muziekkamer_temperature
-
-light:
-  - platform: template
-    lights: 
-      keuken_kookplaat_spotjes:
-        value_template: '{{ is_state("switch.keuken_kookplaat_spotjes", "on") }}'
-        turn_on:
-          service: switch.turn_on
-          entity_id: switch.keuken_kookplaat_spotjes
-        turn_off:
-          service: switch.turn_off
-          entity_id: switch.keuken_kookplaat_spotjes
-      woonkamer_tv_backlight:
-        value_template: '{{ is_state("switch.woonkamer_tv_backlight", "on") }}'
-        turn_on:
-          service: switch.turn_on
-          entity_id: switch.woonkamer_tv_backlight
-        turn_off:
-          service: switch.turn_off
-          entity_id: switch.woonkamer_tv_backlight
-      woonkamer_staandelamp:
-        value_template: '{{ is_state("switch.woonkamer_staandelamp", "on") }}'
-        turn_on:
-          service: switch.turn_on
-          entity_id: switch.woonkamer_staandelamp
-        turn_off:
-          service: switch.turn_off
-          entity_id: switch.woonkamer_staandelamp
-  - platform: group
-    name: Keuken
-    entities:
-      - light.keuken_raam_spotjes
-      - light.keuken_kookplaat_spotjes
-  - platform: group
-    name: Woonkamer
-    entities:
-      - light.woonkamer_staandelamp
-      - light.woonkamer_tv_backlight
-
+# TODO: refactor
 group: !include groups.yaml
-automation: !include automations.yaml
-script: !include scripts.yaml
-

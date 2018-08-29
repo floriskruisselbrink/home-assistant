@@ -1,0 +1,4 @@
+- platform: generic
+  name: Buienradar
+  still_image_url: https://cdn.knmi.nl/knmi/map/page/weer/actueel-weer/neerslagradar/WWWRADARLGT_loop.gif
+
