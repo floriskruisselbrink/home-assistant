@@ -1,0 +1,120 @@
+homeassistant:
+  customize:
+    sensor.woonkamer_multisensor_relative_humidity:
+      device_class: humidity
+    light.woonkamer_staandelamp:
+      icon: mdi:floor-lamp
+    light.woonkamer_tv_backlight:
+      icon: mdi:television-classic
+    light.woonkamer_plafond:
+      icon: mdi:ceiling-light
+    light.eettafel:
+      icon: mdi:ceiling-light
+    switch.woonkamer_staandelamp:
+      hidden: true
+    switch.woonkamer_tv_backlight:
+      hidden: true
+    switch.keuken_kookplaat_spotjes:
+      hidden: true
+
+light:
+  - platform: template
+    lights:
+      woonkamer_staandelamp:
+        value_template: '{{ is_state("switch.woonkamer_staandelamp", "on") }}'
+        turn_on:
+          service: switch.turn_on
+          entity_id: switch.woonkamer_staandelamp
+        turn_off:
+          service: switch.turn_off
+          entity_id: switch.woonkamer_staandelamp
+      woonkamer_tv_backlight:
+        value_template: '{{ is_state("switch.woonkamer_tv_backlight", "on") }}'
+        turn_on:
+          service: switch.turn_on
+          entity_id: switch.woonkamer_tv_backlight
+        turn_off:
+          service: switch.turn_off
+          entity_id: switch.woonkamer_tv_backlight
+      keuken_kookplaat_spotjes:
+        value_template: '{{ is_state("switch.keuken_kookplaat_spotjes", "on") }}'
+        turn_on:
+          service: switch.turn_on
+          entity_id: switch.keuken_kookplaat_spotjes
+        turn_off:
+          service: switch.turn_off
+          entity_id: switch.keuken_kookplaat_spotjes
+
+  - platform: group
+    name: Woonkamer Zithoek
+    entities:
+      - light.woonkamer_staandelamp
+      - light.woonkamer_tv_backlight
+  
+  - platform: group
+    name: Keuken
+    entities:
+      - light.keuken_raam_spotjes
+      - light.keuken_kookplaat_spotjes
+  
+  ###
+  # Minimote configuratie
+  #
+  # scene_id | button | actie
+  # ----------------------------
+  #        1 |      1 | pressed
+  #        2 |      1 | held
+  #        3 |      2 | pressed
+  #        4 |      2 | held
+  #        5 |      3 | pressed
+  #        6 |      3 | held
+  #        7 |      4 | pressed
+  #        8 |      4 | held
+  ###
+
+automation:
+  - id: mini_1_pressed
+    alias: 'Minimote Button 1 Pressed'
+    trigger:
+      - platform: event
+        event_type: zwave.scene_activated
+        event_data:
+          entity_id: zwave.minimote
+          scene_id: 1
+    action:
+      - service: homeassistant.turn_on
+        entity_id: light.woonkamer_zithoek
+  - id: mini_2_pressed
+    alias: 'Minimote Button 2 Pressed'
+    trigger:
+      - platform: event
+        event_type: zwave.scene_activated
+        event_data:
+          entity_id: zwave.minimote
+          scene_id: 3
+    action:
+      - service: homeassistant.turn_off
+        entity_id: light.woonkamer_zithoek
+  - id: mini_3_pressed
+    alias: 'Minimote Button 3 Pressed'
+    trigger:
+      - platform: event
+        event_type: zwave.scene_activated
+        event_data:
+          entity_id: zwave.minimote
+          scene_id: 5
+    action:
+      - service: homeassistant.turn_on
+        entity_id: light.keuken
+  - id: mini_4_pressed
+    alias: 'Minimote Button 4 Pressed'
+    trigger:
+      - platform: event
+        event_type: zwave.scene_activated
+        event_data:
+          entity_id: zwave.minimote
+          scene_id: 7
+    action:
+      - service: homeassistant.turn_off
+        entity_id: light.keuken
+

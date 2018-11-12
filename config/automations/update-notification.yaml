@@ -3,7 +3,11 @@
     platform: state
     entity_id: updater.updater
   action:
-    service: notify.ios_iphone_van_floris
-    data:
-      message: 'Update for Home Assistant is available.'
+    - service: notify.ios_iphone_van_floris
+      data:
+        message: 'Update for Home Assistant is available.'
+    - service: persistent_notification.create
+      data:
+        message: 'Update for Home Assistant is available.'
+        notification_id: 'hass_update_available'
 

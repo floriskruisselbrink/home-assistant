@@ -14,3 +14,11 @@
       arg: wlan0
     - type: ipv4_address
       arg: wlan0
+    - type: process
+      arg: hass
+    - type: process
+      arg: grafana-server
+    - type: process
+      arg: influxd
+    - type: process
+      arg: sshd

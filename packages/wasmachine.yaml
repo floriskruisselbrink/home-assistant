@@ -1,0 +1,93 @@
+homeassistant:
+  customize:
+    sensor.wasmachine_status:
+      icon: mdi:washing-machine
+    binary_sensor.wasmachine_bezig:
+      icon: mdi:washing-machine
+      device_class: motion
+
+input_select:
+  wasmachine_status:
+    name: Wasmachine Status
+    options:
+      - Uit
+      - Aan
+      - Bezig
+      - Klaar
+
+sensor:
+  - platform: template
+    sensors:
+      wasmachine_status:
+        value_template: "{{ states.input_select.wasmachine_status.state }}"
+        friendly_name: Wasmachine Status
+
+binary_sensor:
+  - platform: template
+    sensors:
+      wasmachine_bezig:
+        value_template: "{{ is_state('input_select.wasmachine_status', 'Bezig') }}"
+        friendly_name: Wasmachine bezig
+
+automation:
+  - alias: Wasmachine aanzetten
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.wasmachine_power
+        above: 0.2
+        for:
+          seconds: 10
+    condition: 
+      - condition: state
+        entity_id: input_select.wasmachine_status
+        state: Uit
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.wasmachine_status
+          option: Aan
+
+  - alias: Wasmachine uitzetten
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.wasmachine_power
+        below: 0.2
+        for:
+          minutes: 1
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.wasmachine_status
+          option: Uit
+
+  - alias: Wasmachine bezig
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.wasmachine_power
+        above: 3
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.wasmachine_status
+          option: Bezig
+
+  - alias: Wasmachine klaar
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.wasmachine_power
+        below: 3
+        for:
+          minutes: 2
+    condition:
+      - condition: state
+        entity_id: input_select.wasmachine_status
+        state: Bezig
+    action:
+      - service: input_select.select_option
+        data: 
+          entity_id: input_select.wasmachine_status
+          option: Klaar
+      - service: notify.ios_iphone_van_floris
+        data:
+          message: "Wasmachine is klaar"
+

@@ -1,0 +1,18 @@
+scene:
+  - name: Welterusten
+    entities:
+      group.all_lights: off
+
+automation:
+  - id: alles_uit
+    alias: 'Alles uit'
+    trigger:
+      - platform: event
+        event_type: zwave.scene_activated
+        event_data:
+          entity_id: zwave.eettafel
+          scene_id: 26
+          # single-click
+    action:
+      - service: scene.turn_on
+        entity_id: scene.welterusten

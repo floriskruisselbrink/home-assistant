@@ -1,0 +1,30 @@
+homekit:
+  auto_start: False
+  filter:
+    include_entities:
+      - light.keuken_raam_spotjes
+      - light.keuken_kookplaat_spotjes
+      - light.woonkamer_staandelamp
+      - light.woonkamer_tv_backlight
+      - light.woonkamer_plafond
+      - light.eettafel
+      - sensor.muziekkamer_relative_humidity
+      - sensor.muziekkamer_temperature
+      - sensor.woonkamer_multisensor_relative_humidity
+      - sensor.woonkamer_multisensor_temperature
+      - sensor.enschede_temperatuur
+      - binary_sensor.wasmachine_bezig
+
+automation:
+  - alias: 'Start Homekit'
+    trigger:
+      - platform: event
+        event_type: zwave.network_ready
+      - platform: event
+        event_type: zwave.network_complete
+    action:
+      - service: homekit.start
+      - service: notify.ios_iphone_van_floris
+        data:
+          message: "HomeKit started"
+

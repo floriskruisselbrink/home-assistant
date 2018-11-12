@@ -3,117 +3,213 @@ title: Bleekweg 28
 resources:
   - url: /local/monster-card.js?v=1
     type: js
-  - url: /local/gauge-card.js?v=1
+  - url: /local/slider-entity-row.js?v=1
     type: js
 
 views:
   - title: Home
     icon: mdi:home
     cards:
-      - type: entities
-        title: Verlichting
-        entities: 
-          - light.keuken
-          - light.woonkamer
-      - type: entities
-        title: Muziekkamer
+      - type: horizontal-stack
+        cards:
+        - type: entity-button
+          entity: light.eettafel
+          tap_action: toggle
+          hold_action: more-info
+        - type: entity-button
+          entity: light.keuken
+          tap_action: toggle
+          hold_action: more-info
+      - type: horizontal-stack
+        cards:
+        - type: entity-button
+          name: Woonkamer
+          entity: light.woonkamer_plafond
+          tap_action: toggle
+          hold_action: more-info
+        - type: entity-button
+          name: Zithoek
+          entity: light.woonkamer_zithoek
+          tap_action: toggle
+          hold_action: more-info
+      - type: entity-button
+        name: Alles uit
+        icon: mdi:power
+        entity: scene.welterusten
+        tap_action: call-service
+        service: scene.turn_on
+      - title: Woonkamer
+        type: entities
         entities:
-          - sensor.muziekkamer_relative_humidity
-          - sensor.muziekkamer_temperature
-      - type: entities
-        title: Wasmachine
+          - entity: sensor.woonkamer_multisensor_temperature
+            name: Temperatuur
+          - entity: sensor.woonkamer_multisensor_relative_humidity
+            name: Vochtigheid
+      - title: Muziekkamer
+        type: entities
+        entities:
+          - entity: sensor.muziekkamer_temperature
+            name: Temperatuur
+          - entity: sensor.muziekkamer_relative_humidity
+            name: Vochtigheid
+      - title: Wasmachine
+        type: entities
         entities:
           - entity: sensor.wasmachine_status
             secondary_info: last-changed
           - sensor.wasmachine_power
+      - title: Enschede
+        type: weather-forecast
+        entity: weather.buienradar_enschede
+
+  - title: Verlichting
+    icon: mdi:lightbulb
+    cards:
+      - title: Woonkamer
+        type: entities
+        entities:
+          - entity: light.woonkamer_plafond
+            name: Plafond
+            type: custom:slider-entity-row
+          - entity: light.woonkamer_tv_backlight
+            name: TV backlight
+          - entity: light.woonkamer_staandelamp
+            name: Staande lamp
+      - title: Keuken
+        type: entities
+        entities:
+          - entity: light.eettafel
+            name: Eettafel
+            type: custom:slider-entity-row
+          - entity: light.keuken_raam_spotjes
+            name: Raam spotjes
+            type: custom:slider-entity-row
+          - entity: light.keuken_kookplaat_spotjes
+            name: Kookplaat spotjes
+
+  - title: Omgeving
+    icon: mdi:chart-areaspline
+    cards:
+      - type: sensor
+        entity: sensor.enschede_temperatuur
+        accuracy: 50
+      - type: sensor
+        entity: sensor.woonkamer_multisensor_temperature
+        accuracy: 50
+      - type: sensor
+        entity: sensor.woonkamer_multisensor_relative_humidity
+        accuracy: 50
+      - type: sensor
+        entity: sensor.muziekkamer_temperature
+        accuracy: 50
+      - type: sensor
+        entity: sensor.muziekkamer_relative_humidity
+        accuracy: 50
 
   - title: System
     icon: mdi:settings
     cards:
-      - type: glance
-        title: Raspberry Pi
-        entities:
-          - sensor.disk_use_percent_
-          - sensor.processor_use
-          - sensor.memory_use_percent
       - type: custom:monster-card
         card:
-          type: entities
-          title: Batterijen
+          title: Pi Processes
+          type: glance
         filter:
           include:
-            - entity_id: "sensor.*battery"
-            - entity_id: "sensor.*battery_level"
-      - type: history-graph
-        title: Muziekkamer
-        entities:
-          - sensor.muziekkamer_relative_humidity
-          - sensor.muziekkamer_temperature
-        hours_to_show: 72
+            - entity_id: "sensor.process_*"
+      - type: vertical-stack
+        cards:
+        - type: gauge
+          title: CPU usage
+          entity: sensor.processor_use
+          severity:
+            green: 0
+            yellow: 30
+            red: 70
+        - type: gauge
+          title: Disk usage
+          entity: sensor.disk_use_percent_
+          severity:
+            green: 0
+            yellow: 60
+            red: 85
+        - type: gauge
+          title: Memory usage
+          entity: sensor.memory_use_percent
+          severity:
+            green: 0
+            yellow: 50
+            red: 80
       - type: custom:monster-card
-        show_empty: true
-        card: 
+        card:
+          title: Batterijen
+          type: entities
+        filter:
+          include:
+            - entity_id: "sensor.*battery*"
+          exclude:
+            - entity_id: "sensor.*battery_state"
+      - type: custom:monster-card
+        card:
+          title: Energieverbruik
+          type: entities
+        filter:
+          include:
+            - entity_id: "sensor.*power"
+          
+  - title: All Entities
+    icon: mdi:home-assistant
+    cards:
+      - type: custom:monster-card
+        card:
+          title: Z-Wave
+          type: entities
+        filter:
+          include:
+            - domain: zwave
+              options:
+                secondary_info: entity-id
+      - type: custom:monster-card
+        card:
+          title: All Devices
           type: glance
-          title: Tracker
         filter:
           include:
             - domain: device_tracker
-              #state: 'home'
-
-  - title: Example
-    background: radial-gradient(crimson, skyblue)
-    theme: dark-mode
-    cards:
-      - type: weather-forecast
-        entity: weather.enschede
-      - type: picture-entity
-        entity: camera.buienradar
-        show_state: false
-        show_name: false
-      - type: custom:gauge-card
-        title: Enschede
-        entity: sensor.enschede_temperatuur
-        min: -20
-        max: 35
-      - type: conditional
-        conditions:
-          - entity: sensor.postnl
-            state_not: "0"
-        card:
-          type: entities
-          title: PostNL
-          entities:
-            - sensor.postnl
-      - type: entity-filter
-        entities:
-          - device_tracker.iphone_van_floris
-        state_filter:
-          - 'home'
-        card:
-          type: glance
-          title: People that are home
-
-  - icon: mdi:home-assistant
-    title: Second view
-    cards:
       - type: custom:monster-card
         card:
-          type: entities
           title: All Lights
+          type: entities
+          show_header_toggle: False
         filter:
           include:
             - domain: light
       - type: custom:monster-card
         card:
+          title: All Switches
           type: entities
-          title: Power Consumption
+          show_header_toggle: False
         filter:
           include:
-            - entity_id: "*power"
+            - domain: switch
       - type: custom:monster-card
         card:
-          type: entities
           title: All Sensors
+          type: entities
         filter:
           include:
             - domain: sensor
+              options:
+                secondary_info: entity-id
+            - domain: binary_sensor
+              options:
+                secondary_info: entity-id
+      - type: custom:monster-card
+        card:
+          title: All Automations
+          type: entities
+        filter:
+          include:
+            - domain: automation
+              options:
+                secondary_info: entity-id
+

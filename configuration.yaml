@@ -6,6 +6,7 @@ homeassistant:
   unit_system: metric
   time_zone: Europe/Amsterdam
   customize: !include config/customize.yaml
+  packages: !include_dir_named packages
 
 updater:
   include_used_components: true
@@ -14,31 +15,31 @@ duckdns:
   domain: kruiwagen
   access_token: !secret duckdns_accesstoken
 
-downloader:
-  download_dir: downloads
+http:
+  base_url: !secret base_url
+  trusted_networks: !secret trusted_networks
+  ssl_certificate: !secret ssl_certificate
+  ssl_key: !secret ssl_key
+  api_password: !secret http_password
 
-zwave: !include config/zwave.yaml
-homekit: !include config/homekit.yaml
-http: !include config/http.yaml
-influxdb: !include config/influxdb.yaml
-recorder: !include config/recorder.yaml
-history:
-logbook:
 frontend:
 config:
-python_script:
+history:
+logbook:
 discovery:
 ios:
 sun:
 
-weather: !include config/weather.yaml
-camera: !include config/camera.yaml
-light: !include_dir_merge_list config/light
-sensor: !include_dir_merge_list config/sensor
+zwave: !include config/zwave.yaml
+recorder: !include config/recorder.yaml
 
-input_select: !include config/input_select.yaml
-automation: !include_dir_merge_list config/automations
-script: !include_dir_merge_list config/scripts
+# TODO: hieronder moet nog weg
+#influxdb: !include config/influxdb.yaml
+python_script:
+
+#sensor: !include_dir_merge_list config/sensor
+
+panel_iframe: !include_dir_merge_named config/panel_iframe
 
 # TODO: refactor
-group: !include groups.yaml
+#group: !include groups.yaml

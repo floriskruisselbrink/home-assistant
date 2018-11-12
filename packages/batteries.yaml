@@ -1,0 +1,15 @@
+sensor:
+  - platform: template
+    sensors:
+      muziekkamer_multisensor_battery:
+        friendly_name: Muziekkamer Multisensor
+        unit_of_measurement: "%"
+        device_class: battery
+        value_template: "{{ states.zwave.muziekkamer_multisensor_2in1.attributes.battery_level }}"
+        entity_id: zwave.muziekkamer_multisensor_2in1
+      woonkamer_multisensor_battery:
+        friendly_name: Woonkamer Multisensor
+        unit_of_measurement: "%"
+        device_class: battery
+        value_template: "{{ states.zwave.woonkamer_multisensor.attributes.battery_level }}"
+        entity_id: zwave.woonkamer_multisensor

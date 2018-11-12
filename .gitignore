@@ -12,9 +12,11 @@
 
 .homekit.state
 .HA_VERSION
+.storage/
 /deps
 OZW_Log.txt
 secrets.yaml
 known_devices.yaml
 ip_bans.yaml
 .uuid
+www/z-wave-graph.json

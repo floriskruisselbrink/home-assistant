@@ -1,0 +1,18 @@
+weather:
+  - platform: buienradar
+    name: Buienradar Enschede
+    forecast: True
+
+camera:
+  - platform: generic
+    name: Buienradar
+    still_image_url: https://cdn.knmi.nl/knmi/map/page/weer/actueel-weer/neerslagradar/WWWRADARLGT_loop.gif
+
+sensor:
+  - platform: template
+    sensors:
+      enschede_temperatuur:
+        friendly_name: Buitentemperatuur
+        unit_of_measurement: "°C"
+        value_template: "{{ states.weather.buienradar_enschede.attributes.temperature }}"
+

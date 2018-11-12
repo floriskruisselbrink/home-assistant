@@ -1,6 +1,10 @@
 usb_path: /dev/ttyACM0
 network_key: !secret zwave_network_key
-device_config: !include ../zwave_device_config.yaml
+device_config:
+  light.eettafel_level_2:
+    ignored: true
+  light.woonkamer_plafond_2:
+    ignored: true
 device_config_glob:
   "sensor.*_sourcenodeid*":
     ignored: true

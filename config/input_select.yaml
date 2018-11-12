@@ -1,7 +1,0 @@
-wasmachine_status:
-  name: Wasmachine Status
-  options:
-    - Uit
-    - Aan
-    - Bezig
-    - Klaar

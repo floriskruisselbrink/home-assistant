@@ -1,0 +1,30 @@
+homeassistant:
+  customize:
+    sensor.process_hass:
+      friendly_name: "hass"
+      icon: mdi:home-assistant
+    sensor.process_influxd:
+      friendly_name: "influxdb"
+      icon: mdi:database
+    sensor.process_grafanaserver:
+      friendly_name: "grafana"
+      icon: mdi:view-dashboard
+    sensor.process_sshd:
+      friendly_name: "sshd"
+      icon: mdi:console-network
+
+sensor:
+  - platform: systemmonitor
+    resources:
+      - type: processor_use
+      - type: disk_use_percent
+        arg: /
+      - type: memory_use_percent
+      - type: process
+        arg: hass
+      - type: process
+        arg: grafana-server
+      - type: process
+        arg: influxd
+      - type: process
+        arg: sshd

@@ -8,12 +8,11 @@ include:
     - sensor.keuken_raam_spotjes_power
     - sensor.woonkamer_staandelamp_power
     - sensor.woonkamer_tv_backlight_power
-    - sensor.disk_use_percent_
-    - sensor.memory_use_percent
-    - sensor.processor_use
     - sensor.wasmachine_power
-    - sensor.wasmachine_status
     - input_select.wasmachine_status
     - sensor.muziekkamer_temperature
     - sensor.muziekkamer_relative_humidity
-    - weather.enschede
+    - sensor.woonkamer_multisensor_temperature
+    - sensor.woonkamer_multisensor_relative_humidity
+    - weather.buienradar_enschede
+    - sensor.enschede_temperatuur
