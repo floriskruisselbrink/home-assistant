@@ -9,6 +9,7 @@ include:
     - sensor.woonkamer_staandelamp_power
     - sensor.woonkamer_tv_backlight_power
     - sensor.wasmachine_power
+    - sensor.wasmachine_status
     - input_select.wasmachine_status
     - sensor.muziekkamer_temperature
     - sensor.muziekkamer_relative_humidity
