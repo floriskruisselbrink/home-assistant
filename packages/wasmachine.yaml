@@ -4,7 +4,7 @@ homeassistant:
       icon: mdi:washing-machine
     binary_sensor.wasmachine_bezig:
       icon: mdi:washing-machine
-      device_class: motion
+      device_class: opening
 
 input_select:
   wasmachine_status:
@@ -26,8 +26,8 @@ binary_sensor:
   - platform: template
     sensors:
       wasmachine_bezig:
-        value_template: "{{ is_state('input_select.wasmachine_status', 'Bezig') }}"
-        friendly_name: Wasmachine bezig
+        value_template: "{{ is_state('input_select.wasmachine_status', 'Klaar') }}"
+        friendly_name: Wasmachine klaar
 
 automation:
   - alias: Wasmachine aanzetten
