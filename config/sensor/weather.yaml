@@ -1,6 +1,0 @@
-- platform: template
-  sensors:
-    enschede_temperatuur:
-      friendly_name: Enschede
-      unit_of_measurement: "°C"
-      value_template: "{{ states.weather.enschede.attributes.temperature }}"
