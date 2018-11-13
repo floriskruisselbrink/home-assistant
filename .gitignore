@@ -20,3 +20,6 @@ known_devices.yaml
 ip_bans.yaml
 .uuid
 www/z-wave-graph.json
+
+ssl_key.pem
+ssl_cert.pem
