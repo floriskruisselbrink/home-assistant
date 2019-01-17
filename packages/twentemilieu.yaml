@@ -1,0 +1,20 @@
+homeassistant:
+  customize:
+    sensor.twentemilieu_groente_fruit_en_tuinafval:
+      entity_picture: /local/green_icon.svg
+    sensor.twentemilieu_papier_en_karton:
+      entity_picture: /local/paper_icon.svg
+    sensor.twentemilieu_pmd:
+      entity_picture: /local/packages_icon.svg
+    sensor.twentemilieu_restafval:
+      entity_picture: /local/grey_icon.svg
+
+sensor:
+  - platform: twentemilieu
+    resources:
+      - GREY
+      - GREEN
+      - PAPER
+      - PACKAGES
+    postcode: 7512BZ
+    streetnumber: 28
