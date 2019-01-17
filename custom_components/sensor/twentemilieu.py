@@ -189,5 +189,7 @@ class WasteSensor(Entity):
             else:
                 self._state = None
 
+        except TypeError:
+            self._state = None
         except ValueError:
             self._state = None

@@ -8,6 +8,9 @@ homeassistant:
   customize: !include config/customize.yaml
   packages: !include_dir_named packages
 
+lovelace:
+  mode: yaml
+
 updater:
   include_used_components: true
 

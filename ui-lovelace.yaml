@@ -60,32 +60,43 @@ views:
         cards:
           - type: entity-button
             entity: light.eettafel
-            tap_action: toggle
-            hold_action: more-info
+            tap_action:
+              action: toggle
+            hold_action: 
+              action: more-info
           - type: entity-button
             entity: light.keuken
-            tap_action: toggle
-            hold_action: more-info
+            tap_action: 
+              action: toggle
+            hold_action: 
+              action: more-info
       - type: horizontal-stack
         cards:
           - type: entity-button
             name: Woonkamer
             entity: light.woonkamer_plafond
-            tap_action: toggle
-            hold_action: more-info
+            tap_action: 
+              action: toggle
+            hold_action: 
+              action: more-info
           - type: entity-button
             name: Zithoek
             entity: light.woonkamer_zithoek
-            tap_action: toggle
-            hold_action: more-info
+            tap_action: 
+              action: toggle
+            hold_action: 
+              action: more-info
       - type: horizontal-stack
         cards:
           - type: entity-button
             name: Alles uit
             icon: mdi:power
             entity: scene.welterusten
-            tap_action: call-service
-            service: scene.turn_on
+            tap_action: 
+              action: call-service
+              service: scene.turn_on
+              service_data:
+                entity_id: scene.welterusten
           - type: entity-button
             name: Dressoir
             entity: light.dressoir_dimmer
@@ -99,27 +110,30 @@ views:
 
       - title: Wasmachine
         type: entities
+        show_header_toggle: false
         entities:
           - entity: sensor.wasmachine_status
             secondary_info: last-changed
           - sensor.wasmachine_power
 
       - title: Twentemilieu
+        show_header_toggle: false
         type: entities
         entities:
-          - entity: sensor.twentemilieu_groente_fruit_en_tuinafval
+          - entity: sensor.twentemilieu_green
             name: GFT
-            #icon: mdi:leaf
-          - entity: sensor.twentemilieu_papier_en_karton
+            icon: mdi:leaf
+          - entity: sensor.twentemilieu_paper
             name: Papier
             icon: mdi:folder-open
-          - entity: sensor.twentemilieu_pmd
+          - entity: sensor.twentemilieu_packages
             name: PMD
-          - entity: sensor.twentemilieu_restafval
+          - entity: sensor.twentemilieu_grey
             name: Grijs
             icon: mdi:delete
 
       - title: Woonkamer
+        show_header_toggle: false
         type: entities
         entities:
           - entity: sensor.woonkamer_multisensor_temperature
@@ -127,6 +141,7 @@ views:
           - entity: sensor.woonkamer_multisensor_relative_humidity
             name: Vochtigheid
       - title: Muziekkamer
+        show_header_toggle: false
         type: entities
         entities:
           - entity: sensor.muziekkamer_temperature
@@ -184,7 +199,7 @@ views:
           - type: horizontal-stack
             cards:
             - type: gauge
-              title: Woonkamer
+              name: Woonkamer
               entity: sensor.woonkamer_multisensor_temperature
               min: 10
               max: 30
@@ -193,7 +208,7 @@ views:
                 green: 20
                 red: 24
             - type: gauge
-              title: Muziekkamer
+              name: Muziekkamer
               entity: sensor.muziekkamer_temperature
               min: 10
               max: 30
@@ -213,7 +228,7 @@ views:
           - type: horizontal-stack
             cards:
             - type: gauge
-              title: Woonkamer
+              name: Woonkamer
               entity: sensor.woonkamer_multisensor_relative_humidity
               min: 0
               max: 100
@@ -222,7 +237,7 @@ views:
                 green: 40
                 red: 60
             - type: gauge
-              title: Muziekkamer
+              name: Muziekkamer
               entity: sensor.muziekkamer_relative_humidity
               min: 0
               max: 100
@@ -252,7 +267,7 @@ views:
             red: 70
         - type: gauge
           title: Disk usage
-          entity: sensor.disk_use_percent_
+          entity: sensor.disk_use_percent
           severity:
             green: 0
             yellow: 60
@@ -268,6 +283,7 @@ views:
         card:
           title: Batterijen
           type: entities
+          show_header_toggle: false
         filter:
           include:
             - entity_id: "sensor.*battery*"
@@ -277,6 +293,7 @@ views:
         card:
           title: Energieverbruik
           type: entities
+          show_header_toggle: false
         filter:
           include:
             - entity_id: "sensor.*power"
