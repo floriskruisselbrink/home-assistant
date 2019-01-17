@@ -33,8 +33,9 @@ sun:
 zwave: !include config/zwave.yaml
 recorder: !include config/recorder.yaml
 
+influxdb: !include config/influxdb.yaml
+
 # TODO: hieronder moet nog weg
-#influxdb: !include config/influxdb.yaml
 python_script:
 
 #sensor: !include_dir_merge_list config/sensor
@@ -43,3 +44,4 @@ panel_iframe: !include_dir_merge_named config/panel_iframe
 
 # TODO: refactor
 #group: !include groups.yaml
+

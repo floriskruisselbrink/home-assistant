@@ -5,39 +5,120 @@ resources:
     type: js
   - url: /local/slider-entity-row.js?v=1
     type: js
+  - url: /local/popup-card.js?v=1
+    type: js
 
 views:
   - title: Home
     icon: mdi:home
     cards:
+      - type: custom:popup-card
+        entity: 
+          - light.keuken
+          - light.eettafel
+        title: Keuken
+        card:
+          type: entities
+          entities:
+            - entity: light.eettafel
+              name: Eettafel
+              type: custom:slider-entity-row
+              hide_toggle: true
+            - entity: light.keuken_raam_spotjes
+              name: Raam spotjes
+              type: custom:slider-entity-row
+              hide_toggle: true
+            - entity: light.keuken_kookplaat_spotjes
+              name: Kookplaat spotjes
+
+      - type: custom:popup-card
+        entity: 
+          - light.woonkamer_zithoek
+          - light.woonkamer_plafond
+          - light.dressoir_dimmer
+#          - switch.kerstboom
+        title: Woonkamer
+        card:
+          type: entities
+          entities:
+            - entity: light.woonkamer_plafond
+              name: Plafond
+              type: custom:slider-entity-row
+              hide_toggle: true
+            - entity: light.woonkamer_tv_backlight
+              name: TV backlight
+            - entity: light.woonkamer_staandelamp
+              name: Staande lamp
+            - entity: light.dressoir_dimmer
+              name: Dressoir
+              type: custom:slider-entity-row
+              hide_toggle: true
+#            - entity: switch.kerstboom
+#              name: Kerstboom
+
       - type: horizontal-stack
         cards:
-        - type: entity-button
-          entity: light.eettafel
-          tap_action: toggle
-          hold_action: more-info
-        - type: entity-button
-          entity: light.keuken
-          tap_action: toggle
-          hold_action: more-info
+          - type: entity-button
+            entity: light.eettafel
+            tap_action: toggle
+            hold_action: more-info
+          - type: entity-button
+            entity: light.keuken
+            tap_action: toggle
+            hold_action: more-info
       - type: horizontal-stack
         cards:
-        - type: entity-button
-          name: Woonkamer
-          entity: light.woonkamer_plafond
-          tap_action: toggle
-          hold_action: more-info
-        - type: entity-button
-          name: Zithoek
-          entity: light.woonkamer_zithoek
-          tap_action: toggle
-          hold_action: more-info
-      - type: entity-button
-        name: Alles uit
-        icon: mdi:power
-        entity: scene.welterusten
-        tap_action: call-service
-        service: scene.turn_on
+          - type: entity-button
+            name: Woonkamer
+            entity: light.woonkamer_plafond
+            tap_action: toggle
+            hold_action: more-info
+          - type: entity-button
+            name: Zithoek
+            entity: light.woonkamer_zithoek
+            tap_action: toggle
+            hold_action: more-info
+      - type: horizontal-stack
+        cards:
+          - type: entity-button
+            name: Alles uit
+            icon: mdi:power
+            entity: scene.welterusten
+            tap_action: call-service
+            service: scene.turn_on
+          - type: entity-button
+            name: Dressoir
+            entity: light.dressoir_dimmer
+            tap_action: toggle
+            hold_action: more-info
+#          - type: entity-button
+#            name: Kerstboom
+#            entity: switch.kerstboom
+#            tap_action: toggle
+#            hold_action: more-info
+
+      - title: Wasmachine
+        type: entities
+        entities:
+          - entity: sensor.wasmachine_status
+            secondary_info: last-changed
+          - sensor.wasmachine_power
+
+      - title: Twentemilieu
+        type: entities
+        entities:
+          - entity: sensor.twentemilieu_groente_fruit_en_tuinafval
+            name: GFT
+            #icon: mdi:leaf
+          - entity: sensor.twentemilieu_papier_en_karton
+            name: Papier
+            icon: mdi:folder-open
+          - entity: sensor.twentemilieu_pmd
+            name: PMD
+          - entity: sensor.twentemilieu_restafval
+            name: Grijs
+            icon: mdi:delete
+
       - title: Woonkamer
         type: entities
         entities:
@@ -52,12 +133,6 @@ views:
             name: Temperatuur
           - entity: sensor.muziekkamer_relative_humidity
             name: Vochtigheid
-      - title: Wasmachine
-        type: entities
-        entities:
-          - entity: sensor.wasmachine_status
-            secondary_info: last-changed
-          - sensor.wasmachine_power
       - title: Enschede
         type: weather-forecast
         entity: weather.buienradar_enschede
@@ -75,6 +150,11 @@ views:
             name: TV backlight
           - entity: light.woonkamer_staandelamp
             name: Staande lamp
+          - entity: light.dressoir_dimmer
+            name: Dressoir
+            type: custom:slider-entity-row
+          - entity: switch.kerstboom
+            name: Kerstboom
       - title: Keuken
         type: entities
         entities:
@@ -90,21 +170,66 @@ views:
   - title: Omgeving
     icon: mdi:chart-areaspline
     cards:
-      - type: sensor
-        entity: sensor.enschede_temperatuur
-        accuracy: 50
-      - type: sensor
-        entity: sensor.woonkamer_multisensor_temperature
-        accuracy: 50
-      - type: sensor
-        entity: sensor.woonkamer_multisensor_relative_humidity
-        accuracy: 50
-      - type: sensor
-        entity: sensor.muziekkamer_temperature
-        accuracy: 50
-      - type: sensor
-        entity: sensor.muziekkamer_relative_humidity
-        accuracy: 50
+      - type: vertical-stack
+        cards:
+          - type: history-graph
+            title: Temperatuur
+            entities:
+              - entity: sensor.enschede_temperatuur
+                name: Buiten
+              - entity: sensor.woonkamer_multisensor_temperature
+                name: Woonkamer
+              - entity: sensor.muziekkamer_temperature
+                name: Muziekkamer
+          - type: horizontal-stack
+            cards:
+            - type: gauge
+              title: Woonkamer
+              entity: sensor.woonkamer_multisensor_temperature
+              min: 10
+              max: 30
+              severity:
+                yellow: 0
+                green: 20
+                red: 24
+            - type: gauge
+              title: Muziekkamer
+              entity: sensor.muziekkamer_temperature
+              min: 10
+              max: 30
+              severity:
+                yellow: 0
+                green: 20
+                red: 24
+      - type: vertical-stack
+        cards:
+          - type: history-graph
+            title: Luchtvochtigheid
+            entities:
+              - entity: sensor.woonkamer_multisensor_relative_humidity
+                name: Woonkamer
+              - entity: sensor.muziekkamer_relative_humidity
+                name: Muziekkamer
+          - type: horizontal-stack
+            cards:
+            - type: gauge
+              title: Woonkamer
+              entity: sensor.woonkamer_multisensor_relative_humidity
+              min: 0
+              max: 100
+              severity:
+                yellow: 0
+                green: 40
+                red: 60
+            - type: gauge
+              title: Muziekkamer
+              entity: sensor.muziekkamer_relative_humidity
+              min: 0
+              max: 100
+              severity:
+                yellow: 0
+                green: 40
+                red: 60
 
   - title: System
     icon: mdi:settings
@@ -168,13 +293,13 @@ views:
             - domain: zwave
               options:
                 secondary_info: entity-id
-      - type: custom:monster-card
-        card:
-          title: All Devices
-          type: glance
-        filter:
-          include:
-            - domain: device_tracker
+#      - type: custom:monster-card
+#        card:
+#          title: All Devices
+#          type: glance
+#        filter:
+#          include:
+#            - domain: device_tracker
       - type: custom:monster-card
         card:
           title: All Lights

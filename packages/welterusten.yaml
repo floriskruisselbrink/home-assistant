@@ -2,6 +2,7 @@ scene:
   - name: Welterusten
     entities:
       group.all_lights: off
+      switch.kerstboom: off
 
 automation:
   - id: alles_uit

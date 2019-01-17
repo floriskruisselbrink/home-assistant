@@ -8,6 +8,8 @@ homekit:
       - light.woonkamer_tv_backlight
       - light.woonkamer_plafond
       - light.eettafel
+      - light.dressoir_dimmer
+      - switch.kerstboom
       - sensor.muziekkamer_relative_humidity
       - sensor.muziekkamer_temperature
       - sensor.woonkamer_multisensor_relative_humidity

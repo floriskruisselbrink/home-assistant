@@ -1,13 +1,13 @@
 host: 127.0.0.1
-exclude:
-  domains:
-    - weblink
-    - camera
-    - group
-    - zone
-    - alert
-    - automation
-    - script
+database: home
+default_measurement: state
+include:
   entities:
-    - sensor.since_last_boot
-    - sensor.last_boot
+    - sensor.enschede_temperatuur
+    - sensor.muziekkamer_temperature
+    - sensor.woonkamer_multisensor_temperature
+    - sensor.muziekkamer_relative_humidity
+    - sensor.woonkamer_multisensor_relative_humidity
+    - sensor.wasmachine_power
+    - sensor.wasmachine_status
+    - sensor.memory_use_percent

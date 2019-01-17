@@ -90,4 +90,7 @@ automation:
       - service: notify.ios_iphone_van_floris
         data:
           message: "Wasmachine is klaar"
+      - service: notify.ios_marijkes_iphone
+        data:
+          message: "Wasmachine is klaar"
 
