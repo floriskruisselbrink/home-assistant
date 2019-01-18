@@ -12,6 +12,7 @@ class PopupCard extends HTMLElement {
   }
 
   setConfig(config) {
+    this.style.margin = "0";
     this.config = config;
     this.config.title = this.config.title || this.config.entity;
     document.querySelector("home-assistant").addEventListener("hass-more-info", (e) => this._handleMoreInfo(e));
@@ -49,6 +50,7 @@ class PopupCard extends HTMLElement {
     }
     if(e.detail && e.detail.entityId && this.offsetWidth && this.config.entity.includes(e.detail.entityId)) {
       let moreInfo = document.querySelector("home-assistant").__moreInfoEl;
+      moreInfo.style.overflowY = 'auto';
       moreInfo._page = "none";
       moreInfo.shadowRoot.appendChild(this.header);
       moreInfo.shadowRoot.appendChild(this.card);

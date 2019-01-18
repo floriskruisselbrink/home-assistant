@@ -14,6 +14,11 @@ lovelace:
 updater:
   include_used_components: true
 
+custom_updater:
+  track:
+    - cards
+    - components
+
 duckdns:
   domain: kruiwagen
   access_token: !secret duckdns_accesstoken
@@ -41,10 +46,5 @@ influxdb: !include config/influxdb.yaml
 # TODO: hieronder moet nog weg
 python_script:
 
-#sensor: !include_dir_merge_list config/sensor
-
 panel_iframe: !include_dir_merge_named config/panel_iframe
-
-# TODO: refactor
-#group: !include groups.yaml
 
