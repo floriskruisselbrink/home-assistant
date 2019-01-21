@@ -77,6 +77,8 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
 
     entities = []
 
+    entities.append(UpcomingWasteSensor(data))
+
     for resource in config[CONF_RESOURCES]:
         sensor_type = resource.upper()
 
@@ -142,6 +144,53 @@ class WasteData(object):
             self.data = None
             return False
 
+class UpcomingWasteSensor(Entity):
+    
+    def __init__(self, data):
+        self.data = data
+        self._name = SENSOR_PREFIX + ' next pickup'
+        self._icon = None
+        self._state = None
+        self._attributes = None
+        self._unit_of_measurement = None
+    
+    @property
+    def name(self):
+        return self._name
+    
+    @property
+    def icon(self):
+        return self._icon
+    
+    @property
+    def state(self):
+        return self._state
+    
+    @property
+    def device_state_attributes(self):
+        return self._attributes
+
+    @property
+    def unit_of_measurement(self):
+        return self._unit_of_measurement
+
+    def update(self):
+        self.data.update()
+        sensor_type, pickup_date = self._findNextPickup()
+
+        self._state = pickup_date
+        self._unit_of_measurement = SENSOR_TYPES[sensor_type][1]
+        self._icon = SENSOR_TYPES[sensor_type][2]
+
+        self._attributes = {}
+        self._attributes.name = SENSOR_TYPES[sensor_type][0]
+        self._attributes.date = pickup_date
+
+    def _findNextPickup(self):
+        #sortedData = sorted(self.data.data.iteritems(), key=lambda (k,v): (v,k))
+        #return next(sortedData)
+        # TODO: fix
+        return ('GREEN', self.data.data.get('GREEN'))
 
 class WasteSensor(Entity):
 
