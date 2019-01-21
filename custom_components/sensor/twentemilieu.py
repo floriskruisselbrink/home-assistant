@@ -183,14 +183,13 @@ class UpcomingWasteSensor(Entity):
         self._icon = SENSOR_TYPES[sensor_type][2]
 
         self._attributes = {}
-        self._attributes.name = SENSOR_TYPES[sensor_type][0]
-        self._attributes.date = pickup_date
+        self._attributes['name'] = SENSOR_TYPES[sensor_type][0]
+        self._attributes['date'] = pickup_date
 
     def _findNextPickup(self):
-        #sortedData = sorted(self.data.data.iteritems(), key=lambda (k,v): (v,k))
-        #return next(sortedData)
-        # TODO: fix
-        return ('GREEN', self.data.data.get('GREEN'))
+        dict = self.data.data
+        sortedData = [(k, dict[k]) for k in sorted(dict, key=dict.get)]
+        return sortedData[0] if sortedData else None
 
 class WasteSensor(Entity):
 
@@ -225,24 +224,27 @@ class WasteSensor(Entity):
         try:
             today = datetime.today()
             pickupdate = wasteData.get(keyword)
+
             
             if not pickupdate:
               _LOGGER.error('pickupdate null for keyword {}'.format(keyword))
               self._state = None
               return
 
+            self._state = pickupdate
+
             datediff = (pickupdate - today).days + 1
 
-            if datediff >= 8:
-                self._state = pickupdate.strftime('%d-%m-%Y')
-            elif datediff > 1:
-                self._state = pickupdate.strftime('%A, %d-%m-%Y')
-            elif datediff == 1:
-                self._state = pickupdate.strftime('Tomorrow, %d-%m-%Y')
-            elif datediff == 0:
-                self._state = pickupdate.strftime('Today, %d-%m-%Y')
-            else:
-                self._state = None
+            #if datediff >= 8:
+            #    self._state = pickupdate.strftime('%d-%m-%Y')
+            #elif datediff > 1:
+            #    self._state = pickupdate.strftime('%A, %d-%m-%Y')
+            #elif datediff == 1:
+            #    self._state = pickupdate.strftime('Tomorrow, %d-%m-%Y')
+            #elif datediff == 0:
+            #    self._state = pickupdate.strftime('Today, %d-%m-%Y')
+            #else:
+            #    self._state = None
 
         except TypeError:
           _LOGGER.error('TypeError in WasteSensor.update()')  

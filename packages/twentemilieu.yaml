@@ -18,3 +18,8 @@ sensor:
       - PACKAGES
     postcode: 7512BZ
     streetnumber: 28
+
+#  - platform: template
+#    sensors:
+#      twentemilieu_volgende_ophaaldag:
+#        friendly_name: Afval vandaag
