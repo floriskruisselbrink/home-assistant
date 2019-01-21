@@ -122,15 +122,15 @@ views:
         show_header_toggle: false
         type: entities
         entities:
-          - entity: sensor.twentemilieu_green
+          - entity: sensor.twentemilieu_groente_fruit_en_tuinafval
             name: GFT
             icon: mdi:leaf
-          - entity: sensor.twentemilieu_paper
+          - entity: sensor.twentemilieu_papier_en_karton
             name: Papier
             icon: mdi:folder-open
-          - entity: sensor.twentemilieu_packages
+          - entity: sensor.twentemilieu_pmd
             name: PMD
-          - entity: sensor.twentemilieu_grey
+          - entity: sensor.twentemilieu_restafval
             name: Grijs
             icon: mdi:delete
 

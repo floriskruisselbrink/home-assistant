@@ -78,7 +78,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     entities = []
 
     for resource in config[CONF_RESOURCES]:
-        sensor_type = resource.lower()
+        sensor_type = resource.upper()
 
         if sensor_type not in SENSOR_TYPES:
             SENSOR_TYPES[sensor_type] = [sensor_type.title(), '', 'mdi:recycle']
@@ -129,7 +129,7 @@ class WasteData(object):
                 for trashType in requestjson['dataList']:
                     for pickupDate in trashType['pickupDates']:
                         sensorType=trashType['_pickupTypeText']
-                        date = datetime.strptime(pickupDate[0:10], '%Y-%m-%d').date()
+                        date = datetime.strptime(pickupDate[0:10], '%Y-%m-%d')
 
                         # only save nearest (oldest) date
                         if (not sensorType in sensordict) or (date < sensordict[sensorType]):
@@ -176,6 +176,12 @@ class WasteSensor(Entity):
         try:
             today = datetime.today()
             pickupdate = wasteData.get(keyword)
+            
+            if not pickupdate:
+              _LOGGER.error('pickupdate null for keyword {}'.format(keyword))
+              self._state = None
+              return
+
             datediff = (pickupdate - today).days + 1
 
             if datediff >= 8:
@@ -190,6 +196,8 @@ class WasteSensor(Entity):
                 self._state = None
 
         except TypeError:
-            self._state = None
+          _LOGGER.error('TypeError in WasteSensor.update()')  
+          self._state = None
         except ValueError:
-            self._state = None
+          _LOGGER.error('ValueError in WasteSensor.update()')  
+          self._state = None
