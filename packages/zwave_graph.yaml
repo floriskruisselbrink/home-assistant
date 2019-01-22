@@ -1,11 +1,7 @@
-shell_command:
-  z_wave_graph: /srv/homeassistant/bin/python3 ~/bin/z-wave-graph.py
+# https://community.home-assistant.io/t/z-wave-graph-without-the-python/64275
 
-automation:
-  - alias: Generate Z-Wave graph
-    trigger:
-      platform: time
-      minutes: '/5'
-      seconds: 00
-    action:
-      - service: shell_command.z_wave_graph
+panel_custom:
+  - name: zwavegraph2
+    sidebar_title: Z-Wave Graph
+    sidebar_icon: mdi:access-point-network
+    url_path: zwave

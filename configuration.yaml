@@ -46,5 +46,3 @@ influxdb: !include config/influxdb.yaml
 # TODO: hieronder moet nog weg
 python_script:
 
-panel_iframe: !include_dir_merge_named config/panel_iframe
-
