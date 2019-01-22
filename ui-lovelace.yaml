@@ -118,22 +118,6 @@ views:
             secondary_info: last-changed
           - sensor.wasmachine_power
 
-      - title: Twentemilieu
-        show_header_toggle: false
-        type: entities
-        entities:
-          - entity: sensor.twentemilieu_groente_fruit_en_tuinafval
-            name: GFT
-            icon: mdi:leaf
-          - entity: sensor.twentemilieu_papier_en_karton
-            name: Papier
-            icon: mdi:folder-open
-          - entity: sensor.twentemilieu_pmd
-            name: PMD
-          - entity: sensor.twentemilieu_restafval
-            name: Grijs
-            icon: mdi:delete
-
       - title: Woonkamer
         show_header_toggle: false
         type: entities
@@ -153,6 +137,41 @@ views:
       - title: Enschede
         type: weather-forecast
         entity: weather.buienradar_enschede
+
+  - title: Afval
+    icon: mdi:recycle
+    cards:
+      - type: glance
+        title: Volgende lichting
+        entities:
+          - entity: sensor.twentemilieu_groente_fruit_en_tuinafval
+            name: GFT
+          - entity: sensor.twentemilieu_papier_en_karton
+            name: Papier
+          - entity: sensor.twentemilieu_pmd
+            name: PMD
+          - entity: sensor.twentemilieu_restafval
+            name: Restafval
+      - type: horizontal-stack
+        cards:
+          - entity: sensor.twentemilieu_vandaag
+            name: Vandaag
+            state_image:
+              Geen: /local/icons/kliko3.png
+              'Groente, fruit- en tuinafval': /local/icons/gft3.png
+              PMD: /local/icons/plastic3.png
+              Papier en karton: /local/icons/papier3.png
+              Restafval: /local/icons/rest3.png
+            type: picture-entity
+          - entity: sensor.twentemilieu_morgen
+            name: Morgen
+            state_image:
+              Geen: /local/icons/kliko3.png
+              'Groente, fruit- en tuinafval': /local/icons/gft3.png
+              PMD: /local/icons/plastic3.png
+              Papier en karton: /local/icons/papier3.png
+              Restafval: /local/icons/rest3.png
+            type: picture-entity
 
   - title: Verlichting
     icon: mdi:lightbulb

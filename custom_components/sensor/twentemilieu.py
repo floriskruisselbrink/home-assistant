@@ -1,254 +1,263 @@
 """
-Sensor component for Twentemilieu
-Original Author:  Floris Kruisselbrink
+Sensor component to monitor waste collection by Twentemilieu.
+Original Author:  Floris Kruisselbrink <floris+homeassistant@vloris.nl>
 
-Description:
-  Provides sensors for the Dutch waste collector Twentemilieu.
-
-Save the file as twentemilieu.py in [homeassistant]/config/custom_components/sensor/
-
-resources options:
-- GREY
-- GREEN
-- PAPER
-- PACKAGES
-
-Example config:
-Configuration.yaml:
-  sensor:
-    - platform: twentemilieu
-      resources:                       (at least 1 required)
-        - GREY
-        - GREEN
-        - PAPER
-        - PACKAGES
-      postcode: 1111AA                 (required)
-      streetnumber: 1                  (required)
+Currently only works in Enschede
 """
 
 import logging
-import requests
-from datetime import datetime
-from datetime import timedelta
-import voluptuous as vol
+from datetime import date, datetime, timedelta
+from typing import List, NamedTuple, Optional
 
-from homeassistant.components.sensor import PLATFORM_SCHEMA
 import homeassistant.helpers.config_validation as cv
-from homeassistant.const import (CONF_RESOURCES)
-from homeassistant.util import Throttle
+import requests
+import voluptuous as vol
+from homeassistant.components.sensor import PLATFORM_SCHEMA
+from homeassistant.const import ATTR_DATE, CONF_RESOURCES
 from homeassistant.helpers.entity import Entity
 
 __version__ = '1.0.0'
 
 _LOGGER = logging.getLogger(__name__)
 
-MIN_TIME_BETWEEN_UPDATES = timedelta(days=1)
-CONF_POSTCODE = 'postcode'
-CONF_STREETNUMBER = 'streetnumber'
-SENSOR_PREFIX = 'Twentemilieu '
+ATTR_TRASHTYPE = 'trash_type'
 
-# keyword -> [name, unit, icon]
+CONF_POSTCODE = 'postcode'
+CONF_HOUSENUMBER = 'housenumber'
+
 SENSOR_TYPES = {
-    'GREY': ['Restafval', '', 'mdi:recycle'],
-    'PAPER': ['Papier en karton', '', 'mdi:recycle'],
-    'GREEN': ['Groente, fruit- en tuinafval', '', 'mdi:recycle'],
-    'PACKAGES': ['PMD', '', 'mdi:recycle'],
+    'today': ['Vandaag', 'mdi:recycle'],
+    'tomorrow': ['Morgen', 'mdi:recycle'],
+    'grey': ['Restafval', 'mdi:recycle'],
+    'paper': ['Papier en karton', 'mdi:recycle'],
+    'green': ['Groente, fruit- en tuinafval', 'mdi:recycle'],
+    'packages': ['PMD', 'mdi:recycle']
 }
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_RESOURCES, default=[]):
         vol.All(cv.ensure_list, [vol.In(SENSOR_TYPES)]),
     vol.Required(CONF_POSTCODE, default='1111AA'): cv.string,
-    vol.Required(CONF_STREETNUMBER, default='1'): cv.string,
+    vol.Required(CONF_HOUSENUMBER, '1'): cv.string,
 })
 
 
 def setup_platform(hass, config, add_entities, discovery_info=None):
-    _LOGGER.debug('Setup Twentemilieu API retriever')
+    _LOGGER.debug("Setting up Twentemilieu API Reader...")
 
     postcode = config.get(CONF_POSTCODE)
-    streetnumber = config.get(CONF_STREETNUMBER)
-
-    try:
-        data = WasteData(postcode, streetnumber)
-    except requests.exceptions.HTTPError as error:
-        _LOGGER.error(error)
-        return False
+    housenumber = config.get(CONF_HOUSENUMBER)
+    reader = WasteApiReader(postcode, housenumber)
 
     entities = []
 
-    entities.append(UpcomingWasteSensor(data))
-
-    for resource in config[CONF_RESOURCES]:
-        sensor_type = resource.upper()
-
-        if sensor_type not in SENSOR_TYPES:
-            SENSOR_TYPES[sensor_type] = [sensor_type.title(), '', 'mdi:recycle']
-
-        entities.append(WasteSensor(data, sensor_type))
+    for resource in config.get(CONF_RESOURCES):
+        if resource == 'today':
+            entities.append(TodayWasteSensor(reader))
+        elif resource == 'tomorrow':
+            entities.append(TomorrowWasteSensor(reader))
+        else:
+            entities.append(WasteTypeSensor(reader, resource))
 
     add_entities(entities)
 
 
-class WasteData(object):
+##########################################
+# WasteApiReader
+##########################################
 
-    def __init__(self, postcode, streetnumber):
-        self.data = None
-        self.postcode = postcode
-        self.streetnumber = streetnumber
 
-    @Throttle(MIN_TIME_BETWEEN_UPDATES)
-    def update(self):
-        _LOGGER.debug('Updating Waste collection dates using Rest API')
+# Settings for twentemilieu Enschede:
+DEFAULT_BASEURL = 'https://wasteapi.2go-mobile.com/api/{}'
+DEFAULT_COMPANYCODE = '8d97bb56-5afd-4cbc-a651-b4f7314264b4'
+DEFAULT_HEADERS = {
+    'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
+    'Referer': 'https://www.twentemilieu.nl/enschede'
+}
+
+
+class WasteApiException(Exception):
+    pass
+
+
+class WasteSchedule(NamedTuple):
+    trash_type: str
+    pickup_date: date
+
+    def __repr__(self):
+        return "WasteSchedule({}: {})".format(self.pickup_date, self.trash_type)
+
+
+class WasteApiReader:
+
+    def __init__(self, postcode: str, housenumber: str) -> None:
+        self.postcode = postcode  # TODO: remove spaces, check it is a valid postcode
+        self.housenumber = housenumber
+        self._request_headers = DEFAULT_HEADERS
+        self._companycode = DEFAULT_COMPANYCODE
+        self._baseurl = DEFAULT_BASEURL
+
+        self._schedules: List[WasteSchedule] = []
+        self._lastupdated: date = None
+
+    def next_collection(self) -> Optional[WasteSchedule]:
+        return self._schedules[0] if self._schedules else None
+
+    def next_collection_of(self, type: str) -> Optional[WasteSchedule]:
+        return next((s for s in self._schedules if s.trash_type == type), None)
+
+    def collection_on(self, date: date) -> Optional[WasteSchedule]:
+        return next((s for s in self._schedules if s.pickup_date == date), None)
+
+    def collection_today(self) -> Optional[WasteSchedule]:
+        today = datetime.now().date()
+        return self.collection_on(today)
+
+    def collection_tomorrow(self) -> Optional[WasteSchedule]:
+        tomorrow = datetime.now().date() + timedelta(days=1)
+        return self.collection_on(tomorrow)
+
+    def update(self) -> None:
+        if self._lastupdated == datetime.now().date():
+            return
+
+        self._lastupdated = datetime.now().date()
+        _LOGGER.debug("Updating waste collection dates using Rest API")
+
         try:
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36',
-                'Referer': 'https://www.twentemilieu.nl/enschede'
-            }
-            data = {
-                'companyCode': '8d97bb56-5afd-4cbc-a651-b4f7314264b4',
-                'postCode': self.postcode,
-                'houseNumber': self.streetnumber
-            }
-            url = 'https://wasteapi.2go-mobile.com/api/FetchAdress'
-            response = requests.post(url, headers=headers, data=data).json()
-            if not response:
-                _LOGGER.error('Address not found!')
-            else:
-                addresscode = response['dataList'][0]['UniqueId']
-                startDate = datetime.now()
-                endDate = startDate + timedelta(days=30)
-                data = {
-                    'companyCode': '8d97bb56-5afd-4cbc-a651-b4f7314264b4',
-                    'uniqueAddressId': addresscode,
-                    'startDate': startDate.strftime('%Y-%m-%d'),
-                    'endDate': endDate.strftime("%Y-%m-%d")
-                }
-                url = 'https://wasteapi.2go-mobile.com/api/GetCalendar'
-                requestjson = requests.post(url, headers=headers, data=data).json()
-                sensordict = {}
+            address_id = self._find_unique_address_id()
+            pickup_calendar = self._get_pickup_calendar(address_id)
+            self._parse_calendar(pickup_calendar)
+        except requests.exceptions.RequestException as x:
+            self._schedules = []
+            raise WasteApiException(
+                "Error occurred while fetching data: %r", x)
 
-                for trashType in requestjson['dataList']:
-                    for pickupDate in trashType['pickupDates']:
-                        sensorType=trashType['_pickupTypeText']
-                        date = datetime.strptime(pickupDate[0:10], '%Y-%m-%d')
+    def _do_post_request(self, action: str, post_data: dict) -> dict:
+        url = self._baseurl.format(action)
+        data = {
+            'companyCode': self._companycode
+        }
+        data.update(post_data)
 
-                        # only save nearest (oldest) date
-                        if (not sensorType in sensordict) or (date < sensordict[sensorType]):
-                            sensordict[sensorType] = date
+        response = requests.post(
+            url, headers=self._request_headers, data=data).json()
+        # TODO: error checking, raise WasteApiException('blabla')
+        return response
 
-                self.data = sensordict
+    def _find_unique_address_id(self) -> str:
+        data = {
+            'postCode': self.postcode,
+            'houseNumber': self.housenumber
+        }
+        response = self._do_post_request('FetchAdress', data)
+        return response['dataList'][0]['UniqueId']
 
-        except requests.exceptions.RequestException as exc:
-            _LOGGER.error('Error occurred while fetching data: %r', exc)
-            self.data = None
-            return False
+    def _get_pickup_calendar(self, unique_address_id) -> dict:
+        start_date = datetime.now()
+        end_date = start_date + timedelta(days=30)
+        data = {
+            'uniqueAddressId': unique_address_id,
+            'startDate': start_date.strftime('%Y-%m-%d'),
+            'endDate': end_date.strftime('%Y-%m-%d')
+        }
+        response = self._do_post_request('GetCalendar', data)
+        return response
 
-class UpcomingWasteSensor(Entity):
-    
-    def __init__(self, data):
-        self.data = data
-        self._name = SENSOR_PREFIX + ' next pickup'
-        self._icon = None
-        self._state = None
-        self._attributes = None
-        self._unit_of_measurement = None
-    
+    def _parse_calendar(self, waste_calendar):
+        schedules = []
+
+        for pickup_type in waste_calendar['dataList']:
+            for pickup_date in pickup_type['pickupDates']:
+                trash_type = pickup_type['_pickupTypeText']
+                trash_date = datetime.strptime(
+                    pickup_date[0:10], '%Y-%m-%d').date()
+
+                schedules.append(WasteSchedule(trash_type, trash_date))
+
+        self._schedules = sorted(schedules, key=lambda s: s.pickup_date)
+        _LOGGER.debug("Schedules found: %r", self._schedules)
+
+
+##########################################
+# WasteSensors
+##########################################
+
+
+class AbstractWasteSensor(Entity):
+
+    def __init__(self, reader: WasteApiReader, sensor_type: str) -> None:
+        self._reader = reader
+        self._schedule = None
+        self._name = "Twentemilieu {}".format(SENSOR_TYPES[sensor_type][0])
+        self._icon = SENSOR_TYPES[sensor_type][1]
+
     @property
     def name(self):
         return self._name
-    
+
     @property
     def icon(self):
         return self._icon
-    
+
     @property
     def state(self):
-        return self._state
-    
+        if not self._schedule:
+            return None
+
+        return self._schedule.pickup_date.strftime('%Y-%m-%d')
+
     @property
     def device_state_attributes(self):
-        return self._attributes
+        if not self._schedule:
+            return None
 
-    @property
-    def unit_of_measurement(self):
-        return self._unit_of_measurement
+        return {
+            ATTR_DATE: self._schedule.pickup_date.strftime('%Y-%m-%d'),
+            ATTR_TRASHTYPE: self._schedule.trash_type
+        }
+
+
+class WasteTypeSensor(AbstractWasteSensor):
+
+    def __init__(self, reader: WasteApiReader, trash_type: str) -> None:
+        super().__init__(reader, trash_type)
+        self._trash_type = trash_type.upper()
+
+    def update(self) -> None:
+        self._reader.update()
+        self._schedule = self._reader.next_collection_of(self._trash_type)
+
+
+class TodayWasteSensor(AbstractWasteSensor):
+
+    def __init__(self, reader: WasteApiReader) -> None:
+        super().__init__(reader, 'today')
 
     def update(self):
-        self.data.update()
-        sensor_type, pickup_date = self._findNextPickup()
-
-        self._state = pickup_date
-        self._unit_of_measurement = SENSOR_TYPES[sensor_type][1]
-        self._icon = SENSOR_TYPES[sensor_type][2]
-
-        self._attributes = {}
-        self._attributes['name'] = SENSOR_TYPES[sensor_type][0]
-        self._attributes['date'] = pickup_date
-
-    def _findNextPickup(self):
-        dict = self.data.data
-        sortedData = [(k, dict[k]) for k in sorted(dict, key=dict.get)]
-        return sortedData[0] if sortedData else None
-
-class WasteSensor(Entity):
-
-    def __init__(self, data, sensor_type):
-        self.data = data
-        self.type = sensor_type
-        self._name = SENSOR_PREFIX + SENSOR_TYPES[self.type][0]
-        self._unit = SENSOR_TYPES[self.type][1]
-        self._icon = SENSOR_TYPES[self.type][2]
-        self._state = None
-
-    @property
-    def name(self):
-        return self._name
-
-    @property
-    def icon(self):
-        return self._icon
+        self._reader.update()
+        self._schedule = self._reader.collection_today()
 
     @property
     def state(self):
-        return self._state
+        if self._schedule is None:
+            return 'Geen'
 
-    @property
-    def unit_of_measurement(self):
-        return self._unit
+        return SENSOR_TYPES[self._schedule.trash_type.lower()][0]
+
+
+class TomorrowWasteSensor(AbstractWasteSensor):
+
+    def __init__(self, reader: WasteApiReader) -> None:
+        super().__init__(reader, 'tomorrow')
 
     def update(self):
-        self.data.update()
-        wasteData = self.data.data
-        keyword = self.type
-        try:
-            today = datetime.today()
-            pickupdate = wasteData.get(keyword)
+        self._reader.update()
+        self._schedule = self._reader.collection_tomorrow()
 
-            
-            if not pickupdate:
-              _LOGGER.error('pickupdate null for keyword {}'.format(keyword))
-              self._state = None
-              return
+    @property
+    def state(self):
+        if self._schedule is None:
+            return 'Geen'
 
-            self._state = pickupdate
-
-            datediff = (pickupdate - today).days + 1
-
-            #if datediff >= 8:
-            #    self._state = pickupdate.strftime('%d-%m-%Y')
-            #elif datediff > 1:
-            #    self._state = pickupdate.strftime('%A, %d-%m-%Y')
-            #elif datediff == 1:
-            #    self._state = pickupdate.strftime('Tomorrow, %d-%m-%Y')
-            #elif datediff == 0:
-            #    self._state = pickupdate.strftime('Today, %d-%m-%Y')
-            #else:
-            #    self._state = None
-
-        except TypeError:
-          _LOGGER.error('TypeError in WasteSensor.update()')  
-          self._state = None
-        except ValueError:
-          _LOGGER.error('ValueError in WasteSensor.update()')  
-          self._state = None
+        return SENSOR_TYPES[self._schedule.trash_type.lower()][0]
