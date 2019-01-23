@@ -172,6 +172,22 @@ views:
               Papier en karton: /local/icons/papier3.png
               Restafval: /local/icons/rest3.png
             type: picture-entity
+      - type: entities
+        show_header_toggle: false
+        entities:
+          - entity: input_boolean.notify_trash
+          - type: call-service
+            name: Trigger notificatie vandaag
+            action_name: Trigger
+            service: automation.trigger
+            service_data:
+              entity_id: automation.afval_vandaag
+          - type: call-service
+            name: Trigger notificatie morgen
+            action_name: Trigger
+            service: automation.trigger
+            service_data:
+              entity_id: automation.afval_morgen
 
   - title: Verlichting
     icon: mdi:lightbulb

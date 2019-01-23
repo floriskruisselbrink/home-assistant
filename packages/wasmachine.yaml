@@ -15,6 +15,12 @@ input_select:
       - Bezig
       - Klaar
 
+input_boolean:
+  notify_wasmachine:
+    name: Wasmachine notificaties
+    initial: on
+    icon: mdi:washing-machine
+
 sensor:
   - platform: template
     sensors:
@@ -87,6 +93,9 @@ automation:
         data: 
           entity_id: input_select.wasmachine_status
           option: Klaar
+      - condition: template
+        value_template: >
+          {{ is_state('input_boolean.notify_wasmachine', 'on') }}
       - service: notify.ios_iphone_van_floris
         data:
           message: "Wasmachine is klaar"

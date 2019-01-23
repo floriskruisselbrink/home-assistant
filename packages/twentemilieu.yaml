@@ -21,7 +21,45 @@ sensor:
       - paper
       - packages
 
-#  - platform: template
-#    sensors:
-#      twentemilieu_volgende_ophaaldag:
-#        friendly_name: Afval vandaag
+input_boolean:
+  notify_trash:
+    name: Afval notificaties
+    initial: off
+    icon: mdi:recycle
+
+automation:
+  - alias: Afval vandaag
+    trigger:
+      - platform: time
+        at: '7:00:00'
+    condition:
+      - condition: template
+        value_template: >
+          {{ is_state('input_boolean.notify_trash', 'on') }}
+      - condition: template
+        value_template: >
+          {{ states('sensor.twentemilieu_vandaag') != 'Geen' }}
+    action:
+      - service: notify.ios_iphone_van_floris
+        data_template:
+          title: Afval aan straat zetten
+          message: >
+            {{ states('sensor.twentemilieu_vandaag') }} wordt vandaag ({{now().strftime("%d %B")}}) opgehaald!
+
+  - alias: Afval morgen
+    trigger:
+      - platform: time
+        at: '20:30:00'
+    condition:
+      - condition: template
+        value_template: >
+          {{ is_state('input_boolean.notify_trash', 'on') }}
+      - condition: template
+        value_template: >
+          {{ states('sensor.twentemilieu_morgen') != 'Geen' }}
+    action:
+      - service: notify.ios_iphone_van_floris
+        data_template:
+          title: Afval aan straat zetten
+          message: >
+            {{ states('sensor.twentemilieu_morgen') }} wordt morgen opgehaald!
