@@ -7,7 +7,7 @@ Currently only works in Enschede
 
 import logging
 from datetime import date, datetime, timedelta
-from typing import List, NamedTuple, Optional
+from typing import NamedTuple
 
 import homeassistant.helpers.config_validation as cv
 import requests
@@ -80,44 +80,45 @@ class WasteApiException(Exception):
     pass
 
 
-class WasteSchedule(NamedTuple):
-    trash_type: str
-    pickup_date: date
-
-    def __repr__(self):
-        return "WasteSchedule({}: {})".format(self.pickup_date, self.trash_type)
+#class WasteSchedule(NamedTuple):
+#    trash_type: str
+#    pickup_date: date
+#
+#    def __repr__(self):
+#        return "WasteSchedule({}: {})".format(self.pickup_date, self.trash_type)
+WasteSchedule = NamedTuple('WasteSchedule', [('trash_type', str), ('pickup_date', date)])
 
 
 class WasteApiReader:
 
-    def __init__(self, postcode: str, housenumber: str) -> None:
+    def __init__(self, postcode, housenumber):
         self.postcode = postcode  # TODO: remove spaces, check it is a valid postcode
         self.housenumber = housenumber
         self._request_headers = DEFAULT_HEADERS
         self._companycode = DEFAULT_COMPANYCODE
         self._baseurl = DEFAULT_BASEURL
 
-        self._schedules: List[WasteSchedule] = []
-        self._lastupdated: date = None
+        self._schedules = []
+        self._lastupdated = None
 
-    def next_collection(self) -> Optional[WasteSchedule]:
+    def next_collection(self):
         return self._schedules[0] if self._schedules else None
 
-    def next_collection_of(self, type: str) -> Optional[WasteSchedule]:
+    def next_collection_of(self, type):
         return next((s for s in self._schedules if s.trash_type == type), None)
 
-    def collection_on(self, date: date) -> Optional[WasteSchedule]:
+    def collection_on(self, date):
         return next((s for s in self._schedules if s.pickup_date == date), None)
 
-    def collection_today(self) -> Optional[WasteSchedule]:
+    def collection_today(self):
         today = datetime.now().date()
         return self.collection_on(today)
 
-    def collection_tomorrow(self) -> Optional[WasteSchedule]:
+    def collection_tomorrow(self):
         tomorrow = datetime.now().date() + timedelta(days=1)
         return self.collection_on(tomorrow)
 
-    def update(self) -> None:
+    def update(self):
         if self._lastupdated == datetime.now().date():
             return
 
@@ -133,7 +134,7 @@ class WasteApiReader:
             raise WasteApiException(
                 "Error occurred while fetching data: %r", x)
 
-    def _do_post_request(self, action: str, post_data: dict) -> dict:
+    def _do_post_request(self, action, post_data):
         url = self._baseurl.format(action)
         data = {
             'companyCode': self._companycode
@@ -145,7 +146,7 @@ class WasteApiReader:
         # TODO: error checking, raise WasteApiException('blabla')
         return response
 
-    def _find_unique_address_id(self) -> str:
+    def _find_unique_address_id(self):
         data = {
             'postCode': self.postcode,
             'houseNumber': self.housenumber
@@ -153,7 +154,7 @@ class WasteApiReader:
         response = self._do_post_request('FetchAdress', data)
         return response['dataList'][0]['UniqueId']
 
-    def _get_pickup_calendar(self, unique_address_id) -> dict:
+    def _get_pickup_calendar(self, unique_address_id):
         start_date = datetime.now()
         end_date = start_date + timedelta(days=30)
         data = {
@@ -186,7 +187,7 @@ class WasteApiReader:
 
 class AbstractWasteSensor(Entity):
 
-    def __init__(self, reader: WasteApiReader, sensor_type: str) -> None:
+    def __init__(self, reader, sensor_type):
         self._reader = reader
         self._schedule = None
         self._name = "Twentemilieu {}".format(SENSOR_TYPES[sensor_type][0])
@@ -220,18 +221,18 @@ class AbstractWasteSensor(Entity):
 
 class WasteTypeSensor(AbstractWasteSensor):
 
-    def __init__(self, reader: WasteApiReader, trash_type: str) -> None:
+    def __init__(self, reader, trash_type):
         super().__init__(reader, trash_type)
         self._trash_type = trash_type.upper()
 
-    def update(self) -> None:
+    def update(self):
         self._reader.update()
         self._schedule = self._reader.next_collection_of(self._trash_type)
 
 
 class TodayWasteSensor(AbstractWasteSensor):
 
-    def __init__(self, reader: WasteApiReader) -> None:
+    def __init__(self, reader):
         super().__init__(reader, 'today')
 
     def update(self):
@@ -248,7 +249,7 @@ class TodayWasteSensor(AbstractWasteSensor):
 
 class TomorrowWasteSensor(AbstractWasteSensor):
 
-    def __init__(self, reader: WasteApiReader) -> None:
+    def __init__(self, reader):
         super().__init__(reader, 'tomorrow')
 
     def update(self):
