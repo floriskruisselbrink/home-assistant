@@ -30,6 +30,13 @@ http:
   ssl_key: !secret ssl_key
   api_password: !secret http_password
 
+notify:
+  - platform: group
+    name: floris_en_marijke
+    services:
+      - service: ios_iphone_van_floris
+      - service: ios_marijkes_iphone
+
 frontend:
 config:
 history:

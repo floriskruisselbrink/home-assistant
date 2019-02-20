@@ -96,10 +96,7 @@ automation:
       - condition: template
         value_template: >
           {{ is_state('input_boolean.notify_wasmachine', 'on') }}
-      - service: notify.ios_iphone_van_floris
-        data:
-          message: "Wasmachine is klaar"
-      - service: notify.ios_marijkes_iphone
+      - service: notify.floris_en_marijke
         data:
           message: "Wasmachine is klaar"
 

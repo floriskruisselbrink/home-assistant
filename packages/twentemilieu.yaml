@@ -29,6 +29,7 @@ input_boolean:
 
 automation:
   - alias: Afval vandaag
+    initial_state: true
     trigger:
       - platform: time
         at: '7:00:00'
@@ -44,9 +45,20 @@ automation:
         data_template:
           title: Afval aan straat zetten
           message: >
-            {{ states('sensor.twentemilieu_vandaag') }} wordt vandaag ({{now().strftime("%d %B")}}) opgehaald!
+            {% set weekdays = ["maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag", "zondag"] %}
+            {% set months = ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"] %}
+            {% set this_month = months[now().month-1] %}
+            {{ states('sensor.twentemilieu_vandaag') }} wordt vandaag ({{now().day}} {{this_month}}) opgehaald!
+          data:
+            attachment:
+              url: >
+                {%- set icons = {'Geen': 'kliko3.png', 'PMD':'plastic3.png', 'GFT':'gft3.png', 'Papier en karton':'papier3.png', 'Restafval':'rest3.png'} -%}
+                https://kruiwagen.duckdns.org:8123/local/icons/{{icons[states('sensor.twentemilieu_vandaag')]}}
+              content-type: png
+              hide-thumbnail: false
 
   - alias: Afval morgen
+    initial_state: true
     trigger:
       - platform: time
         at: '20:30:00'
@@ -63,3 +75,10 @@ automation:
           title: Afval aan straat zetten
           message: >
             {{ states('sensor.twentemilieu_morgen') }} wordt morgen opgehaald!
+          data:
+            attachment:
+              url: >
+                {%- set icons = {'Geen': 'kliko3.png', 'PMD':'plastic3.png', 'GFT':'gft3.png', 'Papier en karton':'papier3.png', 'Restafval':'rest3.png'} -%}
+                https://kruiwagen.duckdns.org:8123/local/icons/{{icons[states('sensor.twentemilieu_morgen')]}}
+              content-type: png
+              hide-thumbnail: false
