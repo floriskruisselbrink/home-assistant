@@ -1,13 +1,15 @@
 title: Bleekweg 28
 
 resources:
+  - url: /local/card-tools.js?v=deb8e3
+    type: js
   - url: /local/monster-card.js?v=0.2.3
     type: js
-  - url: /local/slider-entity-row.js?v=d6da75
+  - url: /local/slider-entity-row.js?v=be80ff
     type: js
-  - url: /local/popup-card.js?v=02923e
+  - url: /local/popup-card.js?v=044b08
     type: js
-  - url: /local/tracker-card.js?v=0.1.5
+  - url: /local/tracker-card.js?v=1.0.0
     type: js
 
 views:
