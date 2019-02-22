@@ -9,7 +9,7 @@ resources:
     type: js
   - url: /local/popup-card.js?v=044b08
     type: js
-  - url: /local/tracker-card.js?v=1.0.0
+  - url: /local/tracker-card.js?v=1.2.3
     type: js
 
 views:
