@@ -41,7 +41,7 @@ automation:
         value_template: >
           {{ states('sensor.twentemilieu_vandaag') != 'Geen' }}
     action:
-      - service: notify.ios_iphone_van_floris
+      - service: notify.floris_en_marijke
         data_template:
           title: Afval aan straat zetten
           message: >
@@ -70,7 +70,7 @@ automation:
         value_template: >
           {{ states('sensor.twentemilieu_morgen') != 'Geen' }}
     action:
-      - service: notify.ios_iphone_van_floris
+      - service: notify.floris_en_marijke
         data_template:
           title: Afval aan straat zetten
           message: >

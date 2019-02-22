@@ -6,7 +6,7 @@ homeassistant:
     sensor.process_influxd:
       friendly_name: "influxdb"
       icon: mdi:database
-    sensor.process_grafanaserver:
+    sensor.process_grafana_server:
       friendly_name: "grafana"
       icon: mdi:view-dashboard
     sensor.process_sshd:
