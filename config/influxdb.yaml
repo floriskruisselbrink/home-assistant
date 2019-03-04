@@ -3,6 +3,7 @@ database: home
 default_measurement: state
 include:
   entities:
+    - weather.buienradar_enschede
     - sensor.enschede_temperatuur
     - sensor.muziekkamer_temperature
     - sensor.woonkamer_multisensor_temperature

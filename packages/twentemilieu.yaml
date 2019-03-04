@@ -24,7 +24,7 @@ sensor:
 input_boolean:
   notify_trash:
     name: Afval notificaties
-    initial: off
+    initial: on
     icon: mdi:recycle
 
 automation:
@@ -52,7 +52,7 @@ automation:
           data:
             attachment:
               url: >
-                {%- set icons = {'Geen': 'kliko3.png', 'PMD':'plastic3.png', 'GFT':'gft3.png', 'Papier en karton':'papier3.png', 'Restafval':'rest3.png'} -%}
+                {%- set icons = {'Geen': 'kliko3.png', 'PMD':'plastic3.png', 'Groente, fruit- en tuinafval':'gft3.png', 'Papier en karton':'papier3.png', 'Restafval':'rest3.png'} -%}
                 https://kruiwagen.duckdns.org:8123/local/icons/{{icons[states('sensor.twentemilieu_vandaag')]}}
               content-type: png
               hide-thumbnail: false
@@ -70,7 +70,7 @@ automation:
         value_template: >
           {{ states('sensor.twentemilieu_morgen') != 'Geen' }}
     action:
-      - service: notify.floris_en_marijke
+      - service: notify.floris_en_marijke 
         data_template:
           title: Afval aan straat zetten
           message: >
@@ -78,7 +78,7 @@ automation:
           data:
             attachment:
               url: >
-                {%- set icons = {'Geen': 'kliko3.png', 'PMD':'plastic3.png', 'GFT':'gft3.png', 'Papier en karton':'papier3.png', 'Restafval':'rest3.png'} -%}
+                {%- set icons = {'Geen': 'kliko3.png', 'PMD':'plastic3.png', 'Groente, fruit- en tuinafval':'gft3.png', 'Papier en karton':'papier3.png', 'Restafval':'rest3.png'} -%}
                 https://kruiwagen.duckdns.org:8123/local/icons/{{icons[states('sensor.twentemilieu_morgen')]}}
               content-type: png
               hide-thumbnail: false
