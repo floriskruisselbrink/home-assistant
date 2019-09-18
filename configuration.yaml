@@ -7,6 +7,13 @@ homeassistant:
   time_zone: Europe/Amsterdam
   customize: !include config/customize.yaml
   packages: !include_dir_named packages
+  auth_providers:
+    - type: trusted_networks
+      trusted_networks:
+        - !secret trusted_networks
+    - type: legacy_api_password
+      api_password: !secret http_password
+    - type: homeassistant
 
 lovelace:
   mode: yaml
@@ -25,10 +32,8 @@ duckdns:
 
 http:
   base_url: !secret base_url
-  trusted_networks: !secret trusted_networks
   ssl_certificate: !secret ssl_certificate
   ssl_key: !secret ssl_key
-  api_password: !secret http_password
 
 notify:
   - platform: group
