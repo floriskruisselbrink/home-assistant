@@ -41,6 +41,12 @@ notify:
       - service: ios_iphone_van_floris
       - service: ios_marijkes_iphone
 
+sensor:
+  - platform: time_date
+    display_options:
+      - 'date'
+      - 'date_time'
+
 frontend:
 config:
 history:

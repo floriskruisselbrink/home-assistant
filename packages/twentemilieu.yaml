@@ -4,6 +4,7 @@ homeassistant:
       entity_picture: /local/icons/gft3.png
     sensor.paper_waste_pickup:
       entity_picture: /local/icons/papier3.png
+    sensor.plastic_waste_pickup:
       entity_picture: /local/icons/plastic3.png
     sensor.non_recyclable_waste_pickup:
       entity_picture: /local/icons/rest3.png
@@ -11,8 +12,107 @@ homeassistant:
 input_boolean:
   notify_trash:
     name: Afval notificaties
-    initial: off
+    initial: on
     icon: mdi:recycle
+
+sensor:
+  - platform: template
+    sensors:
+      organic_waste_pickup_days:
+        entity_id:
+          - sensor.organic_waste_pickup
+          - sensor.date
+        unit_of_measurement: days
+        value_template: >
+          {% set pickup = strptime(states('sensor.organic_waste_pickup'), '%Y-%m-%d') %}
+          {% set today = strptime(states('sensor.date'), '%Y-%m-%d') %}
+          {{ (pickup - today).days }}
+      paper_waste_pickup_days:
+        entity_id:
+          - sensor.paper_waste_pickup
+          - sensor.date
+        unit_of_measurement: days
+        value_template: >
+          {% set pickup = strptime(states('sensor.paper_waste_pickup'), '%Y-%m-%d') %}
+          {% set today = strptime(states('sensor.date'), '%Y-%m-%d') %}
+          {{ (pickup - today).days }}
+      plastic_waste_pickup_days:
+        entity_id:
+          - sensor.plastic_waste_pickup
+          - sensor.date
+        unit_of_measurement: days
+        value_template: >
+          {% set pickup = strptime(states('sensor.plastic_waste_pickup'), '%Y-%m-%d') %}
+          {% set today = strptime(states('sensor.date'), '%Y-%m-%d') %}
+          {{ (pickup - today).days }}
+      non_recyclable_waste_pickup_days:
+        entity_id:
+          - sensor.non_recyclable_waste_pickup
+          - sensor.date
+        unit_of_measurement: days
+        value_template: >
+          {% set pickup = strptime(states('sensor.non_recyclable_waste_pickup'), '%Y-%m-%d') %}
+          {% set today = strptime(states('sensor.date'), '%Y-%m-%d') %}
+          {{ (pickup - today).days }}
+      waste_pickup_today:
+        entity_id:
+          - sensor.organic_waste_pickup_days
+          - sensor.paper_waste_pickup_days
+          - sensor.plastic_waste_pickup_days
+          - sensor.non_recyclable_waste_pickup_days
+        value_template: >
+          {% if is_state('sensor.organic_waste_pickup_days', '0') %}
+            organic_waste_pickup
+          {% elif is_state('sensor.paper_waste_pickup_days', '0') %}
+            paper_waste_pickup
+          {% elif is_state('sensor.plastic_waste_pickup_days', '0') %}
+            plastic_waste_pickup
+          {% elif is_state('sensor.non_recyclable_waste_pickup_days', '0') %}
+            non_recyclable_waste_pickup
+          {% else %}
+            unknown
+          {% endif %}
+        friendly_name_template: >
+          {{ state_attr('sensor.' + states('sensor.waste_pickup_today'), 'friendly_name') }}
+        attribute_templates:
+          icon: >
+            {{ state_attr('sensor.' + states('sensor.waste_pickup_today'), 'icon') }}
+          entity_picture: >
+            {% if is_state('sensor.waste_pickup_today', 'unknown') %}
+              /local/icons/kliko3.png  
+            {% else %}
+              {{ state_attr('sensor.' + states('sensor.waste_pickup_today'), 'entity_picture') }}
+            {% endif %}
+      waste_pickup_tomorrow:
+        entity_id:
+          - sensor.organic_waste_pickup_days
+          - sensor.paper_waste_pickup_days
+          - sensor.plastic_waste_pickup_days
+          - sensor.non_recyclable_waste_pickup_days
+        value_template: >
+          {% if is_state('sensor.organic_waste_pickup_days', '1') %}
+            organic_waste_pickup
+          {% elif is_state('sensor.paper_waste_pickup_days', '1') %}
+            paper_waste_pickup
+          {% elif is_state('sensor.plastic_waste_pickup_days', '1') %}
+            plastic_waste_pickup
+          {% elif is_state('sensor.non_recyclable_waste_pickup_days', '1') %}
+            non_recyclable_waste_pickup
+          {% else %}
+            unknown
+          {% endif %}
+        friendly_name_template: >
+          {{ state_attr('sensor.' + states('sensor.waste_pickup_tomorrow'), 'friendly_name') }}
+        attribute_templates:
+          icon: >
+            {{ state_attr('sensor.' + states('sensor.waste_pickup_tomorrow'), 'icon') }}
+          entity_picture: >
+            {% if is_state('sensor.waste_pickup_tomorrow', 'unknown') %}
+              /local/icons/kliko3.png  
+            {% else %}
+              {{ state_attr('sensor.' + states('sensor.waste_pickup_tomorrow'), 'entity_picture') }}
+            {% endif %}
+# TODO: entity_picture kliko3.png bij unknown
 
 automation:
   - alias: Afval vandaag
@@ -26,21 +126,20 @@ automation:
           {{ is_state('input_boolean.notify_trash', 'on') }}
       - condition: template
         value_template: >
-          {{ states('sensor.twentemilieu_vandaag') != 'Geen' }}
+          {{ states('sensor.waste_pickup_today') != 'unknown' }}
     action:
       - service: notify.floris_en_marijke
         data_template:
           title: Afval aan straat zetten
           message: >
+            {% set friendly_name = state_attr('sensor.waste_pickup_today', 'friendly_name') %}
             {% set weekdays = ["maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag", "zondag"] %}
             {% set months = ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"] %}
             {% set this_month = months[now().month-1] %}
-            {{ states('sensor.twentemilieu_vandaag') }} wordt vandaag ({{now().day}} {{this_month}}) opgehaald!
+            {{friendly_name}} wordt vandaag ({{now().day}} {{this_month}}) opgehaald!
           data:
             attachment:
-              url: >
-                {%- set icons = {'Geen': 'kliko3.png', 'PMD':'plastic3.png', 'Groente, fruit- en tuinafval':'gft3.png', 'Papier en karton':'papier3.png', 'Restafval':'rest3.png'} -%}
-                https://kruiwagen.duckdns.org:8123/local/icons/{{icons[states('sensor.twentemilieu_vandaag')]}}
+              url: https://kruiwagen.duckdns.org:8123{{state_attr('sensor.waste_pickup_today', 'entity_picture')}}
               content-type: png
               hide-thumbnail: false
 
@@ -55,17 +154,16 @@ automation:
           {{ is_state('input_boolean.notify_trash', 'on') }}
       - condition: template
         value_template: >
-          {{ states('sensor.twentemilieu_morgen') != 'Geen' }}
+          {{ states('sensor.waste_pickup_tomorrow') != 'unknown' }}
     action:
-      - service: notify.floris_en_marijke 
+      - service: notify.floris_en_marijke
         data_template:
           title: Afval aan straat zetten
           message: >
-            {{ states('sensor.twentemilieu_morgen') }} wordt morgen opgehaald!
+            {% set friendly_name = state_attr('sensor.waste_pickup_tomorrow', 'friendly_name') %}
+            {{friendly_name}} wordt morgen opgehaald!
           data:
             attachment:
-              url: >
-                {%- set icons = {'Geen': 'kliko3.png', 'PMD':'plastic3.png', 'Groente, fruit- en tuinafval':'gft3.png', 'Papier en karton':'papier3.png', 'Restafval':'rest3.png'} -%}
-                https://kruiwagen.duckdns.org:8123/local/icons/{{icons[states('sensor.twentemilieu_morgen')]}}
+              url: https://kruiwagen.duckdns.org:8123{{state_attr('sensor.waste_pickup_tomorrow', 'entity_picture')}}
               content-type: png
               hide-thumbnail: false

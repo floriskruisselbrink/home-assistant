@@ -11,16 +11,17 @@ resources:
     type: js
   - url: /local/tracker-card.js?v=1.2.3
     type: js
+  - url: /local/mini-graph-card-bundle.js?v=0.7.0
+    type: module
+  - url: /local/simple-thermostat.js?v=0.25.0
+    type: module
 
 views:
 ### Home Tab
   - title: Home
     icon: mdi:home
-    cards:
-      - type: custom:popup-card
-        entity: 
-          - light.keuken
-          - light.eettafel
+    popup_cards:
+      light.keuken:
         title: Keuken
         card:
           type: entities
@@ -35,13 +36,8 @@ views:
               hide_toggle: true
             - entity: light.keuken_kookplaat_spotjes
               name: Kookplaat spotjes
-
-      - type: custom:popup-card
-        entity: 
-          - light.woonkamer_zithoek
-          - light.woonkamer_plafond
-          - light.dressoir_dimmer
-#          - switch.kerstboom
+      light.eettafel: light.keuken
+      light.woonkamer_plafond:
         title: Woonkamer
         card:
           type: entities
@@ -60,7 +56,11 @@ views:
               hide_toggle: true
 #            - entity: switch.kerstboom
 #              name: Kerstboom
+      light.woonkamer_zithoek: light.woonkamer_plafond
+      light.dressoir_dimmer: light.woonkamer_plafond
+      switch.kerstboom: light.woonkamer_plafond
 
+    cards:
       - type: horizontal-stack
         cards:
           - type: entity-button
@@ -142,18 +142,32 @@ views:
         entity: weather.buienradar_enschede
 ### Climate Tab
   - title: Verwarming
-    icon: mdi:home-thermometer-outline
+    icon: mdi:thermometer-lines
     cards:
-      - type: thermostat
+      - type: custom:simple-thermostat
+        name: Vloerverwarming
         entity: climate.driesprong
-      - type: sensor
-        entity: sensor.woonkamer_multisensor_temperature
-        graph: line
-        detail: 2
-      - type: sensor
-        entity: sensor.enschede_temperatuur
-        graph: line
-        detail: 2
+        tap_action:
+          action: none
+        sensors:
+          - entity: sensor.woonkamer_multisensor_relative_humidity
+            name: Vochtigheid
+      - type: custom:mini-graph-card
+        name: Temperatuur
+        align_icon: left
+        align_header: left
+        points_per_hour: 4
+        hour24: true
+        entities:
+          - entity: sensor.woonkamer_multisensor_temperature
+            name: Woonkamer
+            show_fill: false
+          - entity: sensor.muziekkamer_temperature
+            name: Muziekkamer
+            show_fill: false
+          - entity: sensor.enschede_temperatuur
+            name: Buiten
+            show_fill: true
 
 ### Afval Tab
   - title: Afval
@@ -168,23 +182,26 @@ views:
           - entity: sensor.non_recyclable_waste_pickup
       - type: horizontal-stack
         cards:
-          - entity: sensor.twentemilieu_vandaag
+          - entity: sensor.waste_pickup_today
+            # TODO: titel 'Vandaag' anders toevoegen en default name gebruiken
             name: Vandaag
             state_image:
-              Geen: /local/icons/kliko3.png
-              'Groente, fruit- en tuinafval': /local/icons/gft3.png
-              PMD: /local/icons/plastic3.png
-              Papier en karton: /local/icons/papier3.png
-              Restafval: /local/icons/rest3.png
+              unknown: /local/icons/kliko3.png
+              organic_waste_pickup: /local/icons/gft3.png
+              plastic_waste_pickup: /local/icons/plastic3.png
+              paper_waste_pickup: /local/icons/papier3.png
+              non_recyclable_waste_pickup: /local/icons/rest3.png
+            show_state: false
             type: picture-entity
-          - entity: sensor.twentemilieu_morgen
+          - entity: sensor.waste_pickup_tomorrow
             name: Morgen
             state_image:
-              Geen: /local/icons/kliko3.png
-              'Groente, fruit- en tuinafval': /local/icons/gft3.png
-              PMD: /local/icons/plastic3.png
-              Papier en karton: /local/icons/papier3.png
-              Restafval: /local/icons/rest3.png
+              unknown: /local/icons/kliko3.png
+              organic_waste_pickup: /local/icons/gft3.png
+              plastic_waste_pickup: /local/icons/plastic3.png
+              paper_waste_pickup: /local/icons/papier3.png
+              non_recyclable_waste_pickup: /local/icons/rest3.png
+            show_state: false
             type: picture-entity
       - type: entities
         show_header_toggle: false
