@@ -9,17 +9,17 @@ homeassistant:
     sensor.twentemilieu_restafval:
       entity_picture: /local/icons/rest3.png
 
-sensor:
-  - platform: twentemilieu
-    postcode: 7512BZ
-    housenumber: 28
-    resources:
-      - today
-      - tomorrow
-      - grey
-      - green
-      - paper
-      - packages
+#sensor:
+#  - platform: twentemilieu
+#    postcode: 7512BZ
+#    housenumber: 28
+#    resources:
+#      - today
+#      - tomorrow
+#      - grey
+#      - green
+#      - paper
+#      - packages
 
 input_boolean:
   notify_trash:

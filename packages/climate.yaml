@@ -1,0 +1,4 @@
+evohome:
+  username: !secret honeywell_username
+  password: !secret honeywell_password
+  scan_interval: 300

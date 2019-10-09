@@ -9,8 +9,7 @@ homeassistant:
   packages: !include_dir_named packages
   auth_providers:
     - type: trusted_networks
-      trusted_networks:
-        - !secret trusted_networks
+      trusted_networks: !secret trusted_networks
     - type: legacy_api_password
       api_password: !secret http_password
     - type: homeassistant

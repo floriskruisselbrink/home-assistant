@@ -13,6 +13,7 @@ resources:
     type: js
 
 views:
+### Home Tab
   - title: Home
     icon: mdi:home
     cards:
@@ -139,7 +140,22 @@ views:
       - title: Enschede
         type: weather-forecast
         entity: weather.buienradar_enschede
+### Climate Tab
+  - title: Verwarming
+    icon: mdi:home-thermometer-outline
+    cards:
+      - type: thermostat
+        entity: climate.driesprong
+      - type: sensor
+        entity: sensor.woonkamer_multisensor_temperature
+        graph: line
+        detail: 2
+      - type: sensor
+        entity: sensor.enschede_temperatuur
+        graph: line
+        detail: 2
 
+### Afval Tab
   - title: Afval
     icon: mdi:recycle
     cards:
