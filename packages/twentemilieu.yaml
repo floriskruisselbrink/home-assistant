@@ -1,30 +1,17 @@
 homeassistant:
   customize:
-    sensor.twentemilieu_groente_fruit_en_tuinafval:
+    sensor.organic_waste_pickup:
       entity_picture: /local/icons/gft3.png
-    sensor.twentemilieu_papier_en_karton:
+    sensor.paper_waste_pickup:
       entity_picture: /local/icons/papier3.png
-    sensor.twentemilieu_pmd:
       entity_picture: /local/icons/plastic3.png
-    sensor.twentemilieu_restafval:
+    sensor.non_recyclable_waste_pickup:
       entity_picture: /local/icons/rest3.png
-
-#sensor:
-#  - platform: twentemilieu
-#    postcode: 7512BZ
-#    housenumber: 28
-#    resources:
-#      - today
-#      - tomorrow
-#      - grey
-#      - green
-#      - paper
-#      - packages
 
 input_boolean:
   notify_trash:
     name: Afval notificaties
-    initial: on
+    initial: off
     icon: mdi:recycle
 
 automation:

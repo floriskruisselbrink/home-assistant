@@ -162,14 +162,10 @@ views:
       - type: glance
         title: Volgende lichting
         entities:
-          - entity: sensor.twentemilieu_groente_fruit_en_tuinafval
-            name: GFT
-          - entity: sensor.twentemilieu_papier_en_karton
-            name: Papier
-          - entity: sensor.twentemilieu_pmd
-            name: PMD
-          - entity: sensor.twentemilieu_restafval
-            name: Restafval
+          - entity: sensor.organic_waste_pickup
+          - entity: sensor.paper_waste_pickup
+          - entity: sensor.plastic_waste_pickup
+          - entity: sensor.non_recyclable_waste_pickup
       - type: horizontal-stack
         cards:
           - entity: sensor.twentemilieu_vandaag
