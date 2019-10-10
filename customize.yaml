@@ -1,6 +1,4 @@
 zone.home:
   radius: 50
-
 sensor.muziekkamer_relative_humidity:
   device_class: humidity
-
