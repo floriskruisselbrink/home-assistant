@@ -1,6 +1,8 @@
 title: Bleekweg 28
 
 resources:
+  - url: /local/compact-custom-header.js?v=1.4.5
+    type: module
   - url: /local/card-tools.js?v=deb8e3
     type: js
   - url: /local/monster-card.js?v=0.2.3
@@ -15,6 +17,9 @@ resources:
     type: module
   - url: /local/simple-thermostat.js?v=0.25.0
     type: module
+
+cch:
+  hide_config: true
 
 views:
   - !include lovelace/home.yaml
