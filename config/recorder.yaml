@@ -17,3 +17,4 @@ include:
     - sensor.woonkamer_multisensor_relative_humidity
     - weather.buienradar_enschede
     - sensor.enschede_temperatuur
+    - climate.driesprong

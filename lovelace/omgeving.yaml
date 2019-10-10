@@ -1,0 +1,65 @@
+title: Omgeving
+icon: mdi:chart-areaspline
+cards:
+  - type: vertical-stack
+    cards:
+      - type: history-graph
+        title: Temperatuur
+        entities:
+          - entity: sensor.enschede_temperatuur
+            name: Buiten
+          - entity: sensor.woonkamer_multisensor_temperature
+            name: Woonkamer
+          - entity: sensor.muziekkamer_temperature
+            name: Muziekkamer
+      - type: horizontal-stack
+        cards:
+        - type: gauge
+          name: Woonkamer
+          entity: sensor.woonkamer_multisensor_temperature
+          min: 10
+          max: 30
+          severity:
+            yellow: 0
+            green: 20
+            red: 24
+        - type: gauge
+          name: Muziekkamer
+          entity: sensor.muziekkamer_temperature
+          min: 10
+          max: 30
+          severity:
+            yellow: 0
+            green: 20
+            red: 24
+  - type: vertical-stack
+    cards:
+      - type: history-graph
+        title: Luchtvochtigheid
+        entities:
+          - entity: sensor.woonkamer_multisensor_relative_humidity
+            name: Woonkamer
+          - entity: sensor.muziekkamer_relative_humidity
+            name: Muziekkamer
+      - type: horizontal-stack
+        cards:
+        - type: gauge
+          name: Woonkamer
+          entity: sensor.woonkamer_multisensor_relative_humidity
+          min: 0
+          max: 100
+          severity:
+            yellow: 0
+            green: 40
+            red: 60
+        - type: gauge
+          name: Muziekkamer
+          entity: sensor.muziekkamer_relative_humidity
+          min: 0
+          max: 100
+          severity:
+            yellow: 0
+            green: 40
+            red: 60
+
+

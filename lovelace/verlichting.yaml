@@ -1,0 +1,31 @@
+title: Verlichting
+icon: mdi:lightbulb
+cards:
+  - title: Woonkamer
+    type: entities
+    entities:
+      - entity: light.woonkamer_plafond
+        name: Plafond
+        type: custom:slider-entity-row
+      - entity: light.woonkamer_tv_backlight
+        name: TV backlight
+      - entity: light.woonkamer_staandelamp
+        name: Staande lamp
+      - entity: light.dressoir_dimmer
+        name: Dressoir
+        type: custom:slider-entity-row
+      - entity: switch.kerstboom
+        name: Kerstboom
+  - title: Keuken
+    type: entities
+    entities:
+      - entity: light.eettafel
+        name: Eettafel
+        type: custom:slider-entity-row
+      - entity: light.keuken_raam_spotjes
+        name: Raam spotjes
+        type: custom:slider-entity-row
+      - entity: light.keuken_kookplaat_spotjes
+        name: Kookplaat spotjes
+
+

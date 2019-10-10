@@ -54,6 +54,7 @@ logbook:
 discovery:
 ios:
 sun:
+system_health:
 
 zwave: !include config/zwave.yaml
 recorder: !include config/recorder.yaml

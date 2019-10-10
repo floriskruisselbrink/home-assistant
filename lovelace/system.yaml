@@ -1,0 +1,57 @@
+title: System
+icon: mdi:settings
+cards:
+  - type: custom:tracker-card
+    title:
+    trackers:
+      - sensor.custom_component_tracker
+      - sensor.custom_card_tracker
+  - type: custom:monster-card
+    card:
+      title: Pi Processes
+      type: glance
+    filter:
+      include:
+        - entity_id: "sensor.process_*"
+  - type: vertical-stack
+    cards:
+    - type: gauge
+      title: CPU usage
+      entity: sensor.processor_use
+      severity:
+        green: 0
+        yellow: 30
+        red: 70
+    - type: gauge
+      title: Disk usage
+      entity: sensor.disk_use_percent
+      severity:
+        green: 0
+        yellow: 60
+        red: 85
+    - type: gauge
+      title: Memory usage
+      entity: sensor.memory_use_percent
+      severity:
+        green: 0
+        yellow: 50
+        red: 80
+  - type: custom:monster-card
+    card:
+      title: Batterijen
+      type: entities
+      show_header_toggle: false
+    filter:
+      include:
+        - entity_id: "sensor.*battery*"
+      exclude:
+        - entity_id: "sensor.*battery_state"
+  - type: custom:monster-card
+    card:
+      title: Energieverbruik
+      type: entities
+      show_header_toggle: false
+    filter:
+      include:
+        - entity_id: "sensor.*power"
+

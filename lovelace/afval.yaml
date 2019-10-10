@@ -1,0 +1,51 @@
+### Afval Tab
+title: Afval
+icon: mdi:recycle
+cards:
+  - type: glance
+    title: Volgende lichting
+    entities:
+      - entity: sensor.organic_waste_pickup
+      - entity: sensor.paper_waste_pickup
+      - entity: sensor.plastic_waste_pickup
+      - entity: sensor.non_recyclable_waste_pickup
+  - type: horizontal-stack
+    cards:
+      - entity: sensor.waste_pickup_today
+        # TODO: titel 'Vandaag' anders toevoegen en default name gebruiken
+        name: Vandaag
+        state_image:
+          unknown: /local/icons/kliko3.png
+          organic_waste_pickup: /local/icons/gft3.png
+          plastic_waste_pickup: /local/icons/plastic3.png
+          paper_waste_pickup: /local/icons/papier3.png
+          non_recyclable_waste_pickup: /local/icons/rest3.png
+        show_state: false
+        type: picture-entity
+      - entity: sensor.waste_pickup_tomorrow
+        name: Morgen
+        state_image:
+          unknown: /local/icons/kliko3.png
+          organic_waste_pickup: /local/icons/gft3.png
+          plastic_waste_pickup: /local/icons/plastic3.png
+          paper_waste_pickup: /local/icons/papier3.png
+          non_recyclable_waste_pickup: /local/icons/rest3.png
+        show_state: false
+        type: picture-entity
+  - type: entities
+    show_header_toggle: false
+    entities:
+      - entity: input_boolean.notify_trash
+      - type: call-service
+        name: Trigger notificatie vandaag
+        action_name: Trigger
+        service: automation.trigger
+        service_data:
+          entity_id: automation.afval_vandaag
+      - type: call-service
+        name: Trigger notificatie morgen
+        action_name: Trigger
+        service: automation.trigger
+        service_data:
+          entity_id: automation.afval_morgen
+

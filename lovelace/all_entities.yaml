@@ -1,0 +1,58 @@
+title: All Entities
+icon: mdi:home-assistant
+cards:
+  - type: custom:monster-card
+    card:
+      title: Z-Wave
+      type: entities
+    filter:
+      include:
+        - domain: zwave
+          options:
+            secondary_info: entity-id
+#      - type: custom:monster-card
+#        card:
+#          title: All Devices
+#          type: glance
+#        filter:
+#          include:
+#            - domain: device_tracker
+  - type: custom:monster-card
+    card:
+      title: All Lights
+      type: entities
+      show_header_toggle: False
+    filter:
+      include:
+        - domain: light
+  - type: custom:monster-card
+    card:
+      title: All Switches
+      type: entities
+      show_header_toggle: False
+    filter:
+      include:
+        - domain: switch
+  - type: custom:monster-card
+    card:
+      title: All Sensors
+      type: entities
+    filter:
+      include:
+        - domain: sensor
+          options:
+            secondary_info: entity-id
+        - domain: binary_sensor
+          options:
+            secondary_info: entity-id
+  - type: custom:monster-card
+    card:
+      title: All Automations
+      type: entities
+    filter:
+      include:
+        - domain: automation
+          options:
+            secondary_info: entity-id
+
+

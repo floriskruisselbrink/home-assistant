@@ -1,0 +1,30 @@
+### Climate Tab
+title: Verwarming
+icon: mdi:thermometer-lines
+cards:
+  - type: custom:simple-thermostat
+    name: Vloerverwarming
+    entity: climate.driesprong
+    tap_action:
+      action: none
+    sensors:
+      - entity: sensor.woonkamer_multisensor_relative_humidity
+        name: Vochtigheid
+  - type: custom:mini-graph-card
+    name: Temperatuur
+    align_icon: left
+    align_header: left
+    points_per_hour: 4
+    hour24: true
+    entities:
+      - entity: sensor.woonkamer_multisensor_temperature
+        name: Woonkamer
+        show_fill: false
+      - entity: sensor.muziekkamer_temperature
+        name: Muziekkamer
+        show_fill: false
+      - entity: sensor.enschede_temperatuur
+        name: Buiten
+        show_fill: true
+
+
