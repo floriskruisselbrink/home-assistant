@@ -1,3 +1,8 @@
+homeassistant:
+  customize:
+    climate.driesprong:
+      friendly_name: Vloerverwarming
+
 evohome:
   username: !secret honeywell_username
   password: !secret honeywell_password

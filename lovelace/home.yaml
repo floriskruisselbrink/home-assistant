@@ -110,6 +110,7 @@ cards:
         name: Temperatuur
       - entity: sensor.woonkamer_multisensor_relative_humidity
         name: Vochtigheid
+      - entity: climate.driesprong
   - title: Muziekkamer
     show_header_toggle: false
     type: entities

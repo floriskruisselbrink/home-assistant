@@ -5,17 +5,33 @@ cards:
   - type: custom:simple-thermostat
     name: Vloerverwarming
     entity: climate.driesprong
+    modes:
+      Heat:
+        include: true
+      "Off":
+        include: true
     tap_action:
       action: none
     sensors:
+      - entity: climate.driesprong
+        attribute: hvac_action
+        name: Action
       - entity: sensor.woonkamer_multisensor_relative_humidity
         name: Vochtigheid
+
+#  - type: thermostat
+#    name: Vloerverwarming
+#    entity: climate.driesprong
+
   - type: custom:mini-graph-card
-    name: Temperatuur
+    name: Temperatuur 48h
     align_icon: left
     align_header: left
     points_per_hour: 4
+    hours_to_show: 48
     hour24: true
+    show:
+      state: false
     entities:
       - entity: sensor.woonkamer_multisensor_temperature
         name: Woonkamer
@@ -26,5 +42,51 @@ cards:
       - entity: sensor.enschede_temperatuur
         name: Buiten
         show_fill: true
+
+  - type: entities
+    title: Status
+    show_header_toggle: false
+    entities:
+      - climate.driesprong
+      - sensor.woonkamer_multisensor_temperature
+      - sensor.muziekkamer_temperature
+      - entity: sensor.enschede_temperatuur
+        icon: mdi:weather-sunny
+
+#  - type: horizontal-stack
+#    cards:
+#      - type: custom:mini-graph-card
+#        name: Woonkamer
+#        entities:
+#          - sensor.woonkamer_multisensor_temperature
+#        hour24: true
+#        show:
+#          graph: false
+#          icon: true
+#          extrema: true
+#          fill: false
+#        align_state: center
+#      - type: custom:mini-graph-card
+#        name: Muziekkamer
+#        entities:
+#          - sensor.muziekkamer_temperature
+#        hour24: true
+#        show:
+#          graph: false
+#          icon: true
+#          extrema: true
+#          fill: false
+#        align_state: center
+#      - type: custom:mini-graph-card
+#        name: Buiten
+#        entities:
+#          - sensor.enschede_temperatuur
+#        hour24: true
+#        show:
+#          graph: false
+#          icon: true
+#          extrema: true
+#          fill: false
+#        align_state: center
 
 
