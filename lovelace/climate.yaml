@@ -5,11 +5,18 @@ cards:
   - type: custom:simple-thermostat
     name: Vloerverwarming
     entity: climate.driesprong
-    modes:
-      Heat:
-        include: true
-      "Off":
-        include: true
+    control:
+      preset:
+        away:
+          name: Afwezig
+          icon: mdi:home-export-outline
+        eco:
+          icon: mdi:leaf
+      hvac:
+        'off':
+          name: Uit
+        heat:
+          name: Aan
     tap_action:
       action: none
     sensors:

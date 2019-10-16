@@ -18,3 +18,4 @@ include:
     - weather.buienradar_enschede
     - sensor.enschede_temperatuur
     - climate.driesprong
+    - binary_sensor.updater

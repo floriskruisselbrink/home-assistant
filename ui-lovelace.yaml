@@ -15,7 +15,9 @@ resources:
     type: js
   - url: /local/mini-graph-card-bundle.js?v=0.7.0
     type: module
-  - url: /local/simple-thermostat.js?v=0.26.0
+  - url: /local/simple-thermostat.js?v=0.28.0
+    type: module
+  - url: /local/postnl-card.js?v=0.0001
     type: module
 
 cch:
@@ -26,6 +28,7 @@ views:
   - !include lovelace/climate.yaml
   - !include lovelace/afval.yaml
   - !include lovelace/verlichting.yaml
+  - !include lovelace/post.yaml
   - !include lovelace/omgeving.yaml
   - !include lovelace/system.yaml
   - !include lovelace/all_entities.yaml 

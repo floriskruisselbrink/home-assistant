@@ -14,6 +14,7 @@ homeassistant:
       api_password: !secret http_password
     - type: homeassistant
 
+lovelace_gen:
 lovelace:
   mode: yaml
 
@@ -24,6 +25,8 @@ custom_updater:
   track:
     - cards
     - components
+  card_urls:
+    - https://raw.githubusercontent.com/peternijssen/lovelace-postnl/master/tracker.json
 
 duckdns:
   domain: kruiwagen

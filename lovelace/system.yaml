@@ -1,5 +1,18 @@
 title: System
 icon: mdi:settings
+badges:
+  - entity: device_tracker.iphone_van_floris
+    name: Floris
+  - entity: device_tracker.marijkes_iphone
+    name: Marijke
+  - entity: sensor.processor_use
+    name: Processor
+  - entity: sensor.disk_use_percent
+    name: Disk use
+  - entity: sensor.memory_use_percent
+    name: Mem. use
+  - entity: binary_sensor.updater
+    name: Updates
 cards:
   - type: custom:tracker-card
     title:

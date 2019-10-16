@@ -28,3 +28,18 @@ sensor:
         arg: influxd
       - type: process
         arg: sshd
+
+automation:
+  - alias: Update notification
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.updater
+        from: 'off'
+        to: 'on'
+    action:
+      - service: persistent_notification.create
+        data_template:
+          title: 'New Home Assistant Release'
+          message: "Home Assistant {{ state_attr('binary_sensor.updater', 'newest_version') }} is now available."
+          notification_id: ha_update_available
+
