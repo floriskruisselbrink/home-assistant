@@ -16,11 +16,6 @@ badges:
   - entity: binary_sensor.updater
     name: Updates
 cards:
-  - type: custom:tracker-card
-    title:
-    trackers:
-      - sensor.custom_component_tracker
-      - sensor.custom_card_tracker
   - type: custom:monster-card
     card:
       title: Pi Processes
