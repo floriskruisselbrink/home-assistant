@@ -8,15 +8,12 @@ cards:
     control:
       preset:
         away:
-          name: Afwezig
           icon: mdi:home-export-outline
         eco:
           icon: mdi:leaf
       hvac:
-        'off':
-          name: Uit
-        heat:
-          name: Aan
+        'off': false
+        heat: false
     tap_action:
       action: none
     sensors:

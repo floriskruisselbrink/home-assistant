@@ -54,10 +54,13 @@ frontend:
 config:
 history:
 logbook:
-discovery:
 ios:
 sun:
 system_health:
+
+discovery:
+zeroconf:
+ssdp:
 
 zwave:
   usb_path: /dev/ttyACM0
@@ -73,6 +76,5 @@ recorder: !include config/recorder.yaml
 
 influxdb: !include config/influxdb.yaml
 
-# TODO: hieronder moet nog weg
 python_script:
 

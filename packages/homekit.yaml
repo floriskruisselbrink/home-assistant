@@ -15,6 +15,7 @@ homekit:
       - sensor.woonkamer_multisensor_relative_humidity
       - sensor.woonkamer_multisensor_temperature
       - sensor.enschede_temperatuur
+      - climate.driesprong
       - binary_sensor.wasmachine_bezig
 
 automation:
@@ -24,6 +25,8 @@ automation:
         event_type: zwave.network_ready
       - platform: event
         event_type: zwave.network_complete
+      - platform: event
+        event_type: zwave.network_complete_some_dead
     action:
       - service: homekit.start
       - service: notify.ios_iphone_van_floris

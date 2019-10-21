@@ -43,3 +43,11 @@ automation:
           message: "Home Assistant {{ state_attr('binary_sensor.updater', 'newest_version') }} is now available."
           notification_id: ha_update_available
 
+  - alias: Update entity-counter
+    trigger:
+      - platform: event
+        event_type: zwave.network_ready
+      - platform: event
+        event_type: entity_registry_updated
+    action:
+      - service: python_script.overview_entities

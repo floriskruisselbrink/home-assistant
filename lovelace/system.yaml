@@ -11,6 +11,8 @@ badges:
     name: Disk use
   - entity: sensor.memory_use_percent
     name: Mem. use
+  - entity: sensor.overview_entities
+    name: Entities
   - entity: binary_sensor.updater
     name: Updates
 cards:

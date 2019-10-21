@@ -13,7 +13,7 @@ resources:
     type: js
   - url: /local/tracker-card.js?v=1.2.3
     type: js
-  - url: /local/mini-graph-card-bundle.js?v=0.7.0
+  - url: /local/mini-graph-card-bundle.js?v=0.8.0
     type: module
   - url: /local/simple-thermostat.js?v=0.28.0
     type: module
@@ -25,10 +25,10 @@ cch:
 
 views:
   - !include lovelace/home.yaml
-  - !include lovelace/climate.yaml
   - !include lovelace/afval.yaml
+  - !include lovelace/omgeving.yaml
+  - !include lovelace/climate.yaml
   - !include lovelace/verlichting.yaml
   - !include lovelace/post.yaml
-  - !include lovelace/omgeving.yaml
   - !include lovelace/system.yaml
   - !include lovelace/all_entities.yaml 
