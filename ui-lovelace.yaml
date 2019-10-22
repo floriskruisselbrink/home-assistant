@@ -11,8 +11,6 @@ resources:
     type: module
   - url: /local/popup-card.js?v=044b08
     type: js
-  - url: /local/tracker-card.js?v=1.2.3
-    type: js
   - url: /community_plugin/mini-graph-card/mini-graph-card-bundle.js
     type: module
   - url: /community_plugin/simple-thermostat/simple-thermostat.js
@@ -30,5 +28,6 @@ views:
   - !include lovelace/climate.yaml
   - !include lovelace/verlichting.yaml
   - !include lovelace/post.yaml
+  - !include lovelace/harmony.yaml
   - !include lovelace/system.yaml
   - !include lovelace/all_entities.yaml 

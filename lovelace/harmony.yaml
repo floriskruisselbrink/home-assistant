@@ -1,0 +1,8 @@
+### Harmony Remote Tab
+title: Harmony
+icon: mdi:television-play
+cards:
+  - type: entities
+    entities:
+      - sensor.harmony_activity
+      - input_select.harmony_hub

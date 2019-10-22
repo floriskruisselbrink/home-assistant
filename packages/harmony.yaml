@@ -1,0 +1,157 @@
+remote:
+  - platform: harmony
+    name: Harmony Hub
+    activity: Watch TV
+
+sensor:
+  - platform: template
+    sensors:
+      harmony_activity:
+        value_template: "{{ state_attr('remote.harmony_hub', 'current_activity') }}"
+        friendly_name: 'Activiteit'
+
+input_select:
+  harmony_hub:
+    name: Media
+    options:
+      - Powered Off
+      - Watch TV
+      - Listen to Radio
+      - Play Wii
+      - Watch Apple TV
+    initial: Powered Off
+    icon: mdi:monitor
+
+script:
+  harmony_watchtv:
+    sequence:
+      - service: remote.turn_on
+        entity_id: remote.harmony_hub
+        data:
+          activity: "41553884"
+  harmony_listenradio:
+    sequence:
+      - service: remote.turn_on
+        entity_id: remote.harmony_hub
+        data:
+          activity: "41553885"
+  harmony_playwii:
+    sequence:
+      - service: remote.turn_on
+        entity_id: remote.harmony_hub
+        data:
+          activity: "41553886"
+  harmony_appletv:
+    sequence:
+      - service: remote.turn_on
+        entity_id: remote.harmony_hub
+        data:
+          activity: "41553888"
+  harmony_poweroff:
+    sequence:
+      - service: remote.turn_off
+        entity_id: remote.harmony_hub
+
+automation:
+  - alias: "Powered off from Harmony Hub"
+    trigger:
+      platform: state
+      entity_id: remote.harmony_hub
+    condition:
+      condition: template
+      value_template: '{{ trigger.to_state.attributes.current_activity == "PowerOff" }}'
+    action:
+      service: input_select.select_option
+      entity_id: input_select.harmony_hub
+      data:
+        option: "Powered Off"
+  - alias: "Watch TV started from Harmony Hub"
+    trigger:
+      platform: state
+      entity_id: remote.harmony_hub
+    condition:
+      condition: template
+      value_template: '{{ trigger.to_state.attributes.current_activity == "Watch TV" }}'
+    action:
+      service: input_select.select_option
+      entity_id: input_select.harmony_hub
+      data:
+        option: "Watch TV"
+  - alias: "Listen to Radio started from Harmony Hub"
+    trigger:
+      platform: state
+      entity_id: remote.harmony_hub
+    condition:
+      condition: template
+      value_template: '{{ trigger.to_state.attributes.current_activity == "Listen to Radio" }}'
+    action:
+      service: input_select.select_option
+      entity_id: input_select.harmony_hub
+      data:
+        option: "Listen to Radio"
+  - alias: "Play Wii started from Harmony Hub"
+    trigger:
+      platform: state
+      entity_id: remote.harmony_hub
+    condition:
+      condition: template
+      value_template: '{{ trigger.to_state.attributes.current_activity == "Play Wii" }}'
+    action:
+      service: input_select.select_option
+      entity_id: input_select.harmony_hub
+      data:
+        option: "Play Wii"
+  - alias: "Watch Apple TV started from Harmony Hub"
+    trigger:
+      platform: state
+      entity_id: remote.harmony_hub
+    condition:
+      condition: template
+      value_template: '{{ trigger.to_state.attributes.current_activity == "Watch Apple TV" }}'
+    action:
+      service: input_select.select_option
+      entity_id: input_select.harmony_hub
+      data:
+        option: "Watch Apple TV"
+ 
+  - alias: "Watch TV started from HASS"
+    trigger:
+      platform: state
+      entity_id: input_select.harmony_hub
+      to: 'Watch TV'
+    action:
+      service: script.turn_on
+      entity_id: script.harmony_watchtv
+  - alias: "Listen to Radio started from HASS"
+    trigger:
+      platform: state
+      entity_id: input_select.harmony_hub
+      to: 'Listen to Radio'
+    action:
+      service: script.turn_on
+      entity_id: script.harmony_listenradio
+  - alias: "Play Wii started from HASS"
+    trigger:
+      platform: state
+      entity_id: input_select.harmony_hub
+      to: 'Play Wii'
+    action:
+      service: script.turn_on
+      entity_id: script.harmony_playwii
+  - alias: "Watch Apple TV started from HASS"
+    trigger:
+      platform: state
+      entity_id: input_select.harmony_hub
+      to: 'Watch Apple TV'
+    action:
+      service: script.turn_on
+      entity_id: script.harmony_appletv
+  - alias: "Powered off from HASS"
+    trigger:
+      platform: state
+      entity_id: input_select.harmony_hub
+      to: 'Powered Off'
+    action:
+      service: script.turn_on
+      entity_id: script.harmony_poweroff
+
