@@ -1,23 +1,23 @@
 title: Bleekweg 28
 
 resources:
-  - url: /local/compact-custom-header.js?v=1.4.5
+  - url: /community_plugin/compact-custom-header/compact-custom-header.js
     type: module
   - url: /local/card-tools.js?v=deb8e3
     type: js
   - url: /local/monster-card.js?v=0.2.3
     type: js
-  - url: /local/slider-entity-row.js?v=be80ff
-    type: js
+  - url: /community_plugin/lovelace-slider-entity-row/slider-entity-row.js
+    type: module
   - url: /local/popup-card.js?v=044b08
     type: js
   - url: /local/tracker-card.js?v=1.2.3
     type: js
-  - url: /local/mini-graph-card-bundle.js?v=0.8.0
+  - url: /community_plugin/mini-graph-card/mini-graph-card-bundle.js
     type: module
-  - url: /local/simple-thermostat.js?v=0.28.0
+  - url: /community_plugin/simple-thermostat/simple-thermostat.js
     type: module
-  - url: /local/postnl-card.js?v=0.0001
+  - url: /community_plugin/lovelace-postnl-card/postnl-card.js
     type: module
 
 cch:
