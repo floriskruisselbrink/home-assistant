@@ -1,8 +1,17 @@
 ### Harmony Remote Tab
 title: Harmony
-icon: mdi:television-play
+icon: mdi:remote
 cards:
-  - type: entities
-    entities:
-      - sensor.harmony_activity
-      - input_select.harmony_hub
+  - type: horizontal-stack
+    cards:
+      - type: entity-button
+        entity: switch.harmony_poweroff
+      - type: entity-button
+        entity: switch.harmony_watchtv
+      - type: entity-button
+        entity: switch.harmony_listenradio
+      - type: entity-button
+        entity: switch.harmony_playwii
+      - type: entity-button
+        entity: switch.harmony_appletv
+        name: AppleTV
