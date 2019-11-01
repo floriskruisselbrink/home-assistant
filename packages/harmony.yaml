@@ -27,6 +27,29 @@ emulated_hue:
   exposed_domains:
     - light
 
+script:
+  harmony_volume_up:
+    sequence:
+      - service: remote.send_command
+        entity_id: remote.harmony_hub
+        data:
+          device: '65641783'
+          command: 'VolumeUp'
+  harmony_volume_down:
+    sequence:
+      - service: remote.send_command
+        entity_id: remote.harmony_hub
+        data:
+          device: '65641783'
+          command: 'VolumeDown'
+  harmony_volume_mute:
+    sequence:
+      - service: remote.send_command
+        entity_id: remote.harmony_hub
+        data:
+          device: '65641783'
+          command: 'Mute'
+
 switch:
   - platform: template
     switches:

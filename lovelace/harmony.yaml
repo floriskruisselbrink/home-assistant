@@ -15,3 +15,26 @@ cards:
       - type: entity-button
         entity: switch.harmony_appletv
         name: AppleTV
+##########
+### Volume
+##########
+  - type: conditional
+    conditions:
+      - entity: switch.harmony_poweroff
+        state_not: 'on'
+    card:
+      type: horizontal-stack
+      cards:
+        - type: entity-button
+          entity: script.harmony_volume_down
+          icon: mdi:volume-minus
+          show_name: false
+        - type: entity-button
+          entity: script.harmony_volume_mute
+          icon: mdi:volume-off
+          show_name: false
+        - type: entity-button
+          entity: script.harmony_volume_up
+          icon: mdi:volume-plus
+          show_name: false
+        

@@ -10,6 +10,10 @@ homeassistant:
       icon: mdi:ceiling-light
     light.eettafel:
       icon: mdi:ceiling-light
+    light.woonkamer_zithoek:
+      icon: mdi:sofa
+    light.keuken:
+      icon: mdi:water-pump
     switch.kerstboom:
       icon: mdi:pine-tree
     switch.woonkamer_staandelamp:
